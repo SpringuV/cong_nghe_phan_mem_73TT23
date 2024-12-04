@@ -1,0 +1,18 @@
+spring:
+  banner:
+    mode: off
+  application:
+    name: my_project.demo
+  datasource:
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/student_manage_system_v2}
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    password: ${DBMS_PASSWORD:hocmysql1234}
+    username: ${DBMS_USERNAME:root}
+  jpa: # quan trong ?? c� th? li�n k?t v?i database
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+jwt:
+  signerKey: GK5inCtEIvqeI1dg0YETKkr4J9e5p+EAs0rR+QlmYdnvNHIkbtqOP0rdmFYFjF9l
+  valid-duration: 3600
+  refreshable-duration: 7200
