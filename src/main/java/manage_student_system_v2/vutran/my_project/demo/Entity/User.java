@@ -1,5 +1,6 @@
 package manage_student_system_v2.vutran.my_project.demo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -31,12 +33,10 @@ public class User {
     @Column(name = "firstName")
     String firstName;
 
-    @Column(name = "position")
-    String position;
-
     @Column(name = "dob")
     LocalDate dob;
 
     @ManyToMany
+    @JsonBackReference
     Set<Role> roles;
 }
