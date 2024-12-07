@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
 @Table(name = "student")
-@Builder
 @Getter
+@SuperBuilder
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
@@ -26,6 +28,9 @@ public class Student extends User{
 
     @Column(name = "class_name")
     String className;
+
+    @Column(name = "created_at")
+    LocalDate createdAt;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "department_name")

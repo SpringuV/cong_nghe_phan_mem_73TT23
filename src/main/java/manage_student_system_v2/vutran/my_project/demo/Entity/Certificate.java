@@ -19,18 +19,19 @@ import java.util.Set;
 public class Certificate {
     @Column(name = "certificate_id")
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @Column(name = "name_certificate")
+    @Column(name = "name_certificate", unique = true)
     String nameCertificate;
 
-    @Column(name = "issue_date")
+    @Column(name = "issue_date", nullable = false)
     LocalDate issueDate; // ngay cap
 
     @Column(name = "description")
     String description;
 
-    @Column(name = "certificate_type")
+    @Column(name = "certificate_type", nullable = false)
     String certificateType;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

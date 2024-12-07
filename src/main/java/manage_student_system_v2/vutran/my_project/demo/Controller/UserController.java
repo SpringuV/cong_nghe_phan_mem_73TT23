@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.ChangePasswordRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.UserCreationRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.UserUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.*;
@@ -63,6 +64,11 @@ public class UserController {
                 .build();
     }
 
+    @PostMapping("/change-pass/{username}")
+    public ApiResponse<ChangePassResponse> changePassword(@PathVariable("username") String username,@RequestBody @Valid ChangePasswordRequest request){
+        return ApiResponse.<ChangePassResponse>builder()
+                .result(userService.changePassword(username, request))
+                .build();
+    }
 
-    // student
 }

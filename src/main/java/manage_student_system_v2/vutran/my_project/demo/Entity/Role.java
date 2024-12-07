@@ -17,11 +17,12 @@ import java.util.Set;
 @Table(name = "role")
 public class Role {
     @Id
+    @Column(name = "name", nullable = false, unique = true)
     String name;
+
     String description;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "roles_name"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonManagedReference
     Set<User> users;
 

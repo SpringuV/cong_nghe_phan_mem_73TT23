@@ -20,13 +20,17 @@ import java.util.Set;
 public class Diploma {
 
     @Id
-    @Column(name = "diploma_id")
-    String id;
-    @Column(name = "major")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "diploma_id", unique = true, nullable = false)
+    String diplomaId;
+
+    @Column(name = "major", nullable = false)
     String major; // nganh hoc
-    @Column(name = "degree_type")
+
+    @Column(name = "degree_type", nullable = false)
     String degreeType; // loai bang: cu nhan, thac si, ki su, tien si,...
-    @Column(name = "issue_date")
+
+    @Column(name = "issue_date", nullable = false)
     LocalDate issueDate; // ngay cap bang
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

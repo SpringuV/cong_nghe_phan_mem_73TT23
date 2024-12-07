@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-@Builder
+@SuperBuilder
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -37,6 +38,11 @@ public class User {
     LocalDate dob;
 
     @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"), // Khóa chính của User
+            inverseJoinColumns = @JoinColumn(name = "roles_name") // Khóa chính của Role
+    )
     @JsonBackReference
     Set<Role> roles;
 }

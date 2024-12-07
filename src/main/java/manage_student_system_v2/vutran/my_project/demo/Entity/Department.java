@@ -18,13 +18,13 @@ import java.util.Set;
 public class Department {
 
     @Id
-    @Column(name = "name_department")
+    @Column(name = "name_department", nullable = false, unique = true)
     String nameDepartment;
 
     @Column(name = "description")
     String description;
 
-    @Column(name = "contact_email")
+    @Column(name = "contact_email", nullable = false)
     String contactEmail;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

@@ -7,19 +7,18 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Builder
 @Data
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
-    String id;
-    String username;
-    String lastName;
-    String firstName;
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class DiplomaResponse {
 
+    String diplomaId;
+    String major;
+    String degreeType;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate dob;
+    LocalDate issueDate;
+    Set<StudentResponse> students;
 
-    Set<RoleResponse> roles;
 }

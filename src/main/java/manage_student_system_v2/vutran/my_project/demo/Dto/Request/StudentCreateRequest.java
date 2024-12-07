@@ -2,22 +2,25 @@ package manage_student_system_v2.vutran.my_project.demo.Dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import manage_student_system_v2.vutran.my_project.demo.Validator.DobConstraint;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreationRequest {
+public class StudentCreateRequest {
+
     @Size(min = 8, message = "USERNAME_INVALID")
     String username;
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
+    String studentId;
+    String className;
+    String nameDepartment;
     String lastName;
     String firstName;
 

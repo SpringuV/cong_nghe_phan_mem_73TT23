@@ -4,8 +4,10 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import manage_student_system_v2.vutran.my_project.demo.Constant.PredefinedRole;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.ChangePasswordRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.UserCreationRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.UserUpdateRequest;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ChangePassResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.UserResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Role;
 import manage_student_system_v2.vutran.my_project.demo.Entity.User;
@@ -85,6 +87,22 @@ public class UserService {
         String name =context.getAuthentication().getName();
         User user = userRepository.findByUsername(name).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
+    }
+
+    // Người dùng được phép cập nhật nếu họ là chủ sở hữu của User hoặc admin
+    @PreAuthorize("#id == authentication.principal.id || hasRole('ADMIN')")
+    public ChangePassResponse changePassword(String username, ChangePasswordRequest request){
+        String result ="Password changed successfully !";
+        User user = userRepository.findByUsername(username).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+        // if old password encode correct
+        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+            throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+        }
+        // encode new pass
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        // save
+        userRepository.save(user);
+        return ChangePassResponse.builder().response(result).build();
     }
 
 }

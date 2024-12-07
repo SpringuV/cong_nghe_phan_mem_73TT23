@@ -66,4 +66,13 @@ public class GlobalExceptionHandler {
         return message.replace("{"+MIN_ATTRIBUTE+"}", min_Value);
     }
 
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    ResponseEntity<ApiResponse> handlingIllegalArgument(IllegalArgumentException argumentException){
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.<Void>builder()
+                        .message(argumentException.getMessage())
+                        .build()
+                    );
+    }
 }
