@@ -27,7 +27,8 @@ public class Department {
     @Column(name = "contact_email", nullable = false)
     String contactEmail;
 
-    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "departments_students", joinColumns = @JoinColumn(name = "department_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     @JsonManagedReference
     Set<Student> studentSet;
 }

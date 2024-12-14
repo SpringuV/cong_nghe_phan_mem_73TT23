@@ -19,5 +19,5 @@ public class DiplomaCreationRequest {
     String degreeType;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate issueDate;
-    List<String> students;
+    String studentId;
 }

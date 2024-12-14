@@ -5,8 +5,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreateRequest;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ApiResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentResponse;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Service.StudentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,4 +41,10 @@ public class StudentController {
         return ApiResponse.<StudentResponse>builder().build();
     }
 
+    @PutMapping("/update")
+    ApiResponse<StudentUpdateResponse> updateStudent(@RequestBody StudentUpdateRequest studentUpdateRequest){
+        return ApiResponse.<StudentUpdateResponse>builder()
+                .result(studentService.updateStudent(studentUpdateRequest))
+                .build();
+    }
 }

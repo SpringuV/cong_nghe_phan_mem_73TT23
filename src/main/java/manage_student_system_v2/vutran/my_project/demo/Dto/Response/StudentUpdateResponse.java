@@ -1,10 +1,12 @@
-package manage_student_system_v2.vutran.my_project.demo.Dto.Request;
+package manage_student_system_v2.vutran.my_project.demo.Dto.Response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Validator.DobConstraint;
 
 import java.time.LocalDate;
@@ -13,19 +15,22 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentCreateRequest {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class StudentUpdateResponse {
 
     @Size(min = 8, message = "USERNAME_INVALID")
     String username;
-    @Size(min = 8, message = "PASSWORD_INVALID")
-    String password;
     String studentId;
     String className;
-    List<String> nameDepartment;
     String lastName;
     String firstName;
-
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
+    LocalDate updateAt;
+
+    List<CertificateResponse> certificates;
+    List<DiplomaResponse> diplomas;
+    DepartmentResponse department;
+
 }

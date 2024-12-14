@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DiplomaMapper {
 
-    @Mapping(target = "studentSet", ignore = true)
+    @Mapping(target = "student", ignore = true)
     Diploma toDiploma(DiplomaCreationRequest diplomaCreationRequest);
 
     DiplomaResponse toDiplomaResponse(Diploma diploma);

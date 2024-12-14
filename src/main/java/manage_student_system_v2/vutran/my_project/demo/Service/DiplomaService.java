@@ -33,13 +33,8 @@ public class DiplomaService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public DiplomaResponse createDiploma(DiplomaCreationRequest request){
-        Set<Student> studentList = request.getStudents().stream().map(
-                                        studentID -> studentRepository.findByStudentId(studentID)
-                                                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND))
-                                ).collect(Collectors.toSet());
         Diploma diploma = diplomaMapper.toDiploma(request);
-        diploma.setStudentSet(studentList);
-
+        diploma.setStudent(studentRepository.findByStudentId(request.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND)));
         //save diploma
         try {
             diplomaRepository.save(diploma);
@@ -47,14 +42,7 @@ public class DiplomaService {
             e.printStackTrace();
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         }
-
-        return DiplomaResponse.builder()
-                .diplomaId(diploma.getDiplomaId())
-                .major(diploma.getMajor())
-                .degreeType(diploma.getDegreeType())
-                .issueDate(diploma.getIssueDate())
-                .students(diploma.getStudentSet().stream().map(studentMapper::toStudentResponse).collect(Collectors.toSet()))
-                .build();
+        return diplomaMapper.toDiplomaResponse(diploma);
     }
 
     public DiplomaResponse getDiplomaByID(String idDiploma){
