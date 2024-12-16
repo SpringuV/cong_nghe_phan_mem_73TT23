@@ -28,7 +28,11 @@ public interface StudentMapper {
     @Mapping(target = "certificateSet", ignore = true)
     @Mapping(target = "departmentSet", ignore = true)
     @Mapping(target = "diplomaSet", ignore = true)
-    Student updateStudent(@MappingTarget Student student, StudentUpdateRequest studentUpdateRequest);
+    void updateStudent(@MappingTarget Student student, StudentUpdateRequest studentUpdateRequest);
 
+    @Mapping(target = "dob", source = "dob")
+    @Mapping(target = "department", source = "departmentSet")
+    @Mapping(target = "certificates", source = "certificateSet")
+    @Mapping(target = "diplomas", source = "diplomaSet")
     StudentUpdateResponse toStudentUpdateResponse(Student student);
 }

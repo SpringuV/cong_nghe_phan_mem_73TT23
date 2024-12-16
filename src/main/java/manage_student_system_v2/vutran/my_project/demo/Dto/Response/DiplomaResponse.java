@@ -19,6 +19,6 @@ public class DiplomaResponse {
     String degreeType;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate issueDate;
-    StudentResponse students;
+    StudentResponse student;
 
 }

@@ -4,6 +4,7 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.CertificateCr
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.CertificateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Certificate;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CertificateMapper {
@@ -12,4 +13,6 @@ public interface CertificateMapper {
 
     CertificateResponse toCertificateResponse(Certificate certificate);
 
+
+    void updateCertificate(@MappingTarget Certificate certificate, CertificateCreationRequest certificateCreationRequest);
 }

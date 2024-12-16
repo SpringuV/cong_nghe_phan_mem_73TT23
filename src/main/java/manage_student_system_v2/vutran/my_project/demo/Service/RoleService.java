@@ -7,6 +7,8 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.RoleCreationR
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.RoleResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Permission;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Role;
+import manage_student_system_v2.vutran.my_project.demo.Exception.AppException;
+import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.RoleMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.PermissionRepository;
 import manage_student_system_v2.vutran.my_project.demo.Repository.RoleRepository;
@@ -43,6 +45,19 @@ public class RoleService {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteRole(String id){
         roleRepository.deleteById(id);
+    }
+
+    public RoleResponse updateRole(RoleCreationRequest creationRequest){
+        // check id
+        Role role = roleRepository.findById(creationRequest.getName()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        role.setDescription(creationRequest.getDescription());
+
+        // set Permission
+        List<Permission> permissionList = permissionRepository.findAllById(creationRequest.getPermissions());
+        role.setPermissionSet(new HashSet<>(permissionList));
+        roleRepository.save(role);
+
+        return roleMapper.toRoleResponse(role);
     }
 
 }

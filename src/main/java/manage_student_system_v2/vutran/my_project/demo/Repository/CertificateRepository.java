@@ -9,8 +9,8 @@ import java.util.Optional;
 @Repository
 public interface CertificateRepository extends JpaRepository<Certificate, String> {
 
-    boolean exitsByNameCertificate(String name);
+    boolean existsByNameCertificate(String nameCertificate);
 
-    Optional<Certificate> findByNameCertificate(String name);
+    Optional<Certificate> findByNameCertificate(String nameCertificate);
 
 }

@@ -1,6 +1,8 @@
 package manage_student_system_v2.vutran.my_project.demo.Entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,14 +17,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id") // muốn giữ lại cấu trúc tuần tự hóa nhưng tránh vòng lặp bằng cách sử dụng định danh
 @Table(name = "certificate")
 public class Certificate {
-    @Column(name = "certificate_id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
 
-    @Column(name = "name_certificate", unique = true)
+    @Id
+    @Column(name = "name_certificate", unique = true, nullable = false)
     String nameCertificate;
 
     @Column(name = "issue_date", nullable = false)
@@ -34,8 +34,7 @@ public class Certificate {
     @Column(name = "certificate_type", nullable = false)
     String certificateType;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "certificate_student", joinColumns = @JoinColumn(name = "certificate_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    @JsonManagedReference
+    @ManyToMany(mappedBy = "certificateSet", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonBackReference
     Set<Student> studentSet;
 }

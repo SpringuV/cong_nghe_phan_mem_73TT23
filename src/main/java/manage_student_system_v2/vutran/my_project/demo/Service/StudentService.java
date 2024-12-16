@@ -11,6 +11,7 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdat
 import manage_student_system_v2.vutran.my_project.demo.Entity.*;
 import manage_student_system_v2.vutran.my_project.demo.Exception.AppException;
 import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
+import manage_student_system_v2.vutran.my_project.demo.Mapper.DiplomaMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.StudentMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,17 +20,19 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@Transactional
 public class StudentService {
 
     StudentRepository studentRepository;
@@ -39,6 +42,7 @@ public class StudentService {
     DepartmentRepository departmentRepository;
     DiplomaRepository diplomaRepository;
     CertificateRepository certificateRepository;
+    DiplomaMapper diplomaMapper;
 
     public StudentResponse createStudent(StudentCreateRequest createRequest){
 
@@ -88,20 +92,38 @@ public class StudentService {
         return studentMapper.toStudentResponse(student);
     }
 
+//    @PreAuthorize("#studentUpdateRequest.studentId == principal.username || hasRole('ADMIN')") // được phép khi là chủ tài khoản hoặc admin
     public StudentUpdateResponse updateStudent(StudentUpdateRequest studentUpdateRequest){
         // check id
         Student student = studentRepository.findByStudentId(studentUpdateRequest.getStudentId()).orElseThrow(()->new AppException(ErrorCode.STUDENT_NOT_FOUND));
-
         studentMapper.updateStudent(student, studentUpdateRequest);
-
         // set Diploma
-        List<String> diplomas = studentUpdateRequest.getDiplomaId();
-        Set<Diploma> diplomaSet = diplomas.stream().map(diplomaId -> diplomaRepository.findById(diplomaId).orElseThrow(()-> new AppException(ErrorCode.DIPLOMA_NOT_FOUND))).collect(Collectors.toSet());
-        student.setDiplomaSet(diplomaSet);
+        AtomicBoolean checkDiploma = new AtomicBoolean(false);
+        Set<Diploma> diplomaSet = new HashSet<>();
+        studentUpdateRequest.getDiplomaCreate().forEach(
+            diplomaRequest -> {
+                // check diploma existed
+                if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), diplomaRequest.getStudentId())){
+                    Student studentCheck = studentRepository.findByStudentId(diplomaRequest.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+                    Diploma diploma = diplomaMapper.toDiploma(diplomaRequest);
+                    // save diploma
+                    diploma.setStudent(studentCheck);
+                    //save
+                    diplomaRepository.save(diploma);
+                    //add set
+                    diplomaSet.add(diploma);
+                    checkDiploma.set(true);
+                }
+            }
+        );
+        // nếu có diploma mới thì mới cập nhật
+        if(checkDiploma.get()){
+            student.setDiplomaSet(diplomaSet);
+        }
 
         // set Certificate
-        List<String> certificates = studentUpdateRequest.getCertificateId();
-        Set<Certificate>  certificateSet = certificates.stream().map(certificateId -> certificateRepository.findById(certificateId).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
+        List<String> certificates = studentUpdateRequest.getCertificateName();
+        Set<Certificate>  certificateSet = certificates.stream().map(certificateName -> certificateRepository.findByNameCertificate(certificateName).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
 
         // setDepartment

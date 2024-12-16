@@ -19,9 +19,12 @@ public enum ErrorCode {
     INVALID_OLD_PASSWORD(112, "Your old password incorrect !", HttpStatus.BAD_REQUEST),
     STUDENT_NOT_FOUND(113, "Student not found !", HttpStatus.NOT_FOUND),
     DIPLOMA_NOT_FOUND(103, "Diploma not found !", HttpStatus.NOT_FOUND),
+    DIPLOMA_EXISTED(102, "Diploma existed !", HttpStatus.BAD_REQUEST),
     DEPARTMENT_NOT_FOUND(103, "Department not found !", HttpStatus.NOT_FOUND),
     CERTIFICATE_EXISTED(102, "Certificate existed !", HttpStatus.BAD_REQUEST),
-    CERTIFICATE_NOT_FOUND(103, "Certificate not found !", HttpStatus.NOT_FOUND)
+    CERTIFICATE_NOT_FOUND(103, "Certificate not found !", HttpStatus.NOT_FOUND),
+    ROLE_NOT_FOUND(103, "Role not found !", HttpStatus.NOT_FOUND),
+    PERMISSION_NOT_FOUND(103, "Permission not found !", HttpStatus.NOT_FOUND)
     ;
 
     ErrorCode(int code, String message, HttpStatus httpStatus){

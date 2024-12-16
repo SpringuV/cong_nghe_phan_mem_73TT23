@@ -10,7 +10,9 @@ import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Validator.DobConstraint;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +20,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentUpdateResponse {
 
-    @Size(min = 8, message = "USERNAME_INVALID")
+    String id;
     String username;
     String studentId;
     String className;
@@ -27,10 +29,11 @@ public class StudentUpdateResponse {
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate updateAt;
 
-    List<CertificateResponse> certificates;
-    List<DiplomaResponse> diplomas;
-    DepartmentResponse department;
+    Set<CertificateResponse> certificates = new HashSet<>();
+    Set<DiplomaResponse> diplomas = new HashSet<>();
+    Set<DepartmentResponse> department = new HashSet<>();
 
 }

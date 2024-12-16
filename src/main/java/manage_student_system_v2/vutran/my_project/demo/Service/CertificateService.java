@@ -11,6 +11,7 @@ import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.CertificateMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.CertificateRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional
 public class CertificateService {
 
     CertificateRepository certificateRepository;
@@ -25,7 +27,7 @@ public class CertificateService {
 
     public CertificateResponse createCertificate(CertificateCreationRequest request){
         // check exist
-        if(certificateRepository.exitsByNameCertificate(request.getNameCertificate())){
+        if(certificateRepository.existsByNameCertificate(request.getNameCertificate())){
             throw new AppException(ErrorCode.CERTIFICATE_EXISTED);
         }
         Certificate certificate = certificateMapper.toCertificate(request);
@@ -50,6 +52,16 @@ public class CertificateService {
         // delete
         certificateRepository.deleteById(idCertificate);
         return "Deleted Certificate: " + certificate.getNameCertificate();
+    }
+
+    public CertificateResponse updateCertificate(CertificateCreationRequest certificateCreationRequest){
+        // check id
+        Certificate certificate = certificateRepository.findById(certificateCreationRequest.getNameCertificate()).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
+        certificateMapper.updateCertificate(certificate, certificateCreationRequest);
+        // save
+        certificateRepository.save(certificate);
+        return certificateMapper.toCertificateResponse(certificate);
+
     }
 
 }

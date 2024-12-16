@@ -18,8 +18,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentUpdateRequest {
     String studentId;
-    @Size(min = 8, message = "USERNAME_INVALID")
-    String username;
     String className;
     String lastName;
     String firstName;
@@ -27,7 +25,7 @@ public class StudentUpdateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
 
-    List<String> certificateId;
-    List<String> diplomaId;
+    List<String> certificateName;
+    List<DiplomaCreationRequest> diplomaCreate;
     List<String> departmentId;
 }

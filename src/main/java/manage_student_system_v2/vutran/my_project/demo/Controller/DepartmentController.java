@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.DepartmentCreationRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ApiResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.DepartmentResponse;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Response.DiplomaResponse;
 import manage_student_system_v2.vutran.my_project.demo.Service.DepartmentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,13 @@ public class DepartmentController {
                 .build();
     }
 
+    @GetMapping("/{idNameDepartment}")
+    ApiResponse<DepartmentResponse> getDepartmentById(@PathVariable("idNameDepartment")String nameId){
+        return ApiResponse.<DepartmentResponse>builder()
+                .result(departmentService.getDepartment(nameId))
+                .build();
+    }
+
     @DeleteMapping("/{departmentId}")
     ApiResponse<String> deleteDepartment(@PathVariable("departmentId") String idDepartment){
         return ApiResponse.<String>builder()
@@ -40,4 +48,10 @@ public class DepartmentController {
                 .build();
     }
 
+    @PutMapping
+    ApiResponse<DepartmentResponse> updateDepartment(@RequestBody DepartmentCreationRequest departmentCreationRequest){
+        return ApiResponse.<DepartmentResponse>builder()
+                .result(departmentService.updateDepartment(departmentCreationRequest))
+                .build();
+    }
 }

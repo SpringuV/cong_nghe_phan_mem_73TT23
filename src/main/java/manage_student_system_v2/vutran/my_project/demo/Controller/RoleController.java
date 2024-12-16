@@ -39,4 +39,10 @@ public class RoleController {
         return ApiResponse.<Void>builder().build();
     }
 
+    @PutMapping
+    ApiResponse<RoleResponse> updateRole(@RequestBody RoleCreationRequest roleCreationRequest){
+        return  ApiResponse.<RoleResponse>builder()
+                .result(roleService.updateRole(roleCreationRequest))
+                .build();
+    }
 }

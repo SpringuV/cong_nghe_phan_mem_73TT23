@@ -4,6 +4,7 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.DepartmentCre
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.DepartmentResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Department;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface DepartmentMapper {
@@ -12,4 +13,6 @@ public interface DepartmentMapper {
 
     DepartmentResponse toDepartmentResponse(Department department);
 
+
+    void updateDepartment(@MappingTarget Department department, DepartmentCreationRequest departmentCreationRequest);
 }

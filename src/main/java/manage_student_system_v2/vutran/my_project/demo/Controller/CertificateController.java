@@ -46,4 +46,11 @@ public class CertificateController {
                 .result(certificateService.deleteCertificate(idCertificate))
                 .build();
     }
+
+    @PutMapping
+    ApiResponse<CertificateResponse> updateCertificate(@RequestBody CertificateCreationRequest certificateCreationRequest){
+        return ApiResponse.<CertificateResponse>builder()
+                .result(certificateService.updateCertificate(certificateCreationRequest))
+                .build();
+    }
 }
