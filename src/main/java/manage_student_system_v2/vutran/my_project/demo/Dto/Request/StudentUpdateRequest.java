@@ -1,7 +1,6 @@
 package manage_student_system_v2.vutran.my_project.demo.Dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,14 +17,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentUpdateRequest {
     String studentId;
-    String className;
     String lastName;
     String firstName;
+    String graduationStatus;
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
 
     List<String> certificateName;
     List<DiplomaCreationRequest> diplomaCreate;
-    List<String> departmentId;
 }

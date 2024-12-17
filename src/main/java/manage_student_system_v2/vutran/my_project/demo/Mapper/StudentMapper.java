@@ -16,22 +16,18 @@ public interface StudentMapper {
 
     @Mapping(target = "username", source = "username")
     @Mapping(target = "dob", source = "dob")
-    @Mapping(target = "className", source = "className")
     @Mapping(target = "password", source = "password")
     @Mapping(target = "firstName", source = "firstName")
     @Mapping(target = "lastName", source = "lastName")
     @Mapping(target = "studentId", source = "studentId")
-    @Mapping(target = "departmentSet", ignore = true)
     Student toStudent(StudentCreateRequest studentCreateRequest);
 
 
     @Mapping(target = "certificateSet", ignore = true)
-    @Mapping(target = "departmentSet", ignore = true)
     @Mapping(target = "diplomaSet", ignore = true)
     void updateStudent(@MappingTarget Student student, StudentUpdateRequest studentUpdateRequest);
 
     @Mapping(target = "dob", source = "dob")
-    @Mapping(target = "department", source = "departmentSet")
     @Mapping(target = "certificates", source = "certificateSet")
     @Mapping(target = "diplomas", source = "diplomaSet")
     StudentUpdateResponse toStudentUpdateResponse(Student student);

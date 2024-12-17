@@ -23,9 +23,9 @@ public class StudentUpdateResponse {
     String id;
     String username;
     String studentId;
-    String className;
     String lastName;
     String firstName;
+    String graduationStatus;
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
@@ -34,6 +34,4 @@ public class StudentUpdateResponse {
 
     Set<CertificateResponse> certificates = new HashSet<>();
     Set<DiplomaResponse> diplomas = new HashSet<>();
-    Set<DepartmentResponse> department = new HashSet<>();
-
 }

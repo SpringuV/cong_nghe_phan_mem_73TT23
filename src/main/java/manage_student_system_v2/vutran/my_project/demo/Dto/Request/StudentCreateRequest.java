@@ -20,8 +20,7 @@ public class StudentCreateRequest {
     @Size(min = 8, message = "PASSWORD_INVALID")
     String password;
     String studentId;
-    String className;
-    List<String> nameDepartment;
+    String graduationStatus;
     String lastName;
     String firstName;
 

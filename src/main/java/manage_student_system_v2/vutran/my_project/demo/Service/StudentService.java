@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Constant.PredefinedRole;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreateRequest;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentDeleteRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdateResponse;
@@ -39,7 +40,6 @@ public class StudentService {
     RoleRepository roleRepository;
     StudentMapper studentMapper;
     PasswordEncoder passwordEncoder;
-    DepartmentRepository departmentRepository;
     DiplomaRepository diplomaRepository;
     CertificateRepository certificateRepository;
     DiplomaMapper diplomaMapper;
@@ -59,17 +59,11 @@ public class StudentService {
 
         // set Create at
         student.setCreatedAt(LocalDate.now());
+        // set graduationStatus
+        student.setGraduationStatus(createRequest.getGraduationStatus());
 
         //set password
         student.setPassword(passwordEncoder.encode(createRequest.getPassword()));
-
-        // set department
-        student.setDepartmentSet(createRequest.getNameDepartment()
-                .stream()
-                .map(nameDepartment -> departmentRepository
-                        .findByNameDepartment(nameDepartment)
-                        .orElseThrow(()-> new AppException(ErrorCode.DEPARTMENT_NOT_FOUND)))
-                .collect(Collectors.toSet()));
 
         try{
             studentRepository.save(student);
@@ -126,16 +120,19 @@ public class StudentService {
         Set<Certificate>  certificateSet = certificates.stream().map(certificateName -> certificateRepository.findByNameCertificate(certificateName).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
 
-        // setDepartment
-        List<String> departments = studentUpdateRequest.getDepartmentId();
-        Set<Department> departmentSet = departments.stream().map(departmentId -> departmentRepository.findById(departmentId).orElseThrow(()->new AppException(ErrorCode.DEPARTMENT_NOT_FOUND))).collect(Collectors.toSet());
-        student.setDepartmentSet(departmentSet);
         // update time
         student.setUpdateAt(LocalDate.now());
         //save
         student = studentRepository.save(student);
 
         return studentMapper.toStudentUpdateResponse(student);
+    }
+
+    public String deleteStudent(StudentDeleteRequest deleteRequest){
+        // check id
+        Student student = studentRepository.findByStudentId(deleteRequest.getStudentId()).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+        studentRepository.delete(student);
+        return "Deleted Student Id: " + deleteRequest.getStudentId();
     }
 
 }

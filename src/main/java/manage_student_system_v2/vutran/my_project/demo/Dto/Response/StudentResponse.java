@@ -18,13 +18,9 @@ public class StudentResponse {
     String username;
     String lastName;
     String firstName;
-
+    String graduationStatus;
     String studentId;
-    String className;
-    String nameDepartment;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
-
     Set<RoleResponse> roles;
 }

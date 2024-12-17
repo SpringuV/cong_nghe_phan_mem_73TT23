@@ -29,18 +29,11 @@ public class Student extends User{
     @Column(name = "graduation_status")
     String graduationStatus; // trang thai tot nghiep, chua tot nghiep, dang hoc
 
-    @Column(name = "class_name")
-    String className;
-
     @Column(name = "created_at")
     LocalDate createdAt;
 
     @Column(name = "update_at")
     LocalDate updateAt;
-
-    @ManyToMany(mappedBy = "studentSet", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JsonBackReference
-    Set<Department> departmentSet;
 
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonManagedReference

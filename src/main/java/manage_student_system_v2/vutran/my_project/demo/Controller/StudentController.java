@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreateRequest;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentDeleteRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ApiResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentResponse;
@@ -45,6 +46,13 @@ public class StudentController {
     ApiResponse<StudentUpdateResponse> updateStudent(@RequestBody StudentUpdateRequest studentUpdateRequest){
         return ApiResponse.<StudentUpdateResponse>builder()
                 .result(studentService.updateStudent(studentUpdateRequest))
+                .build();
+    }
+
+    @DeleteMapping
+    ApiResponse<String> deleteStudent(@RequestBody StudentDeleteRequest deleteRequest){
+        return ApiResponse.<String>builder()
+                .result(studentService.deleteStudent(deleteRequest))
                 .build();
     }
 }

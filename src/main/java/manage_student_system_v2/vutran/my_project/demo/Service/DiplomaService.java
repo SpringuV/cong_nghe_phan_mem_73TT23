@@ -41,6 +41,7 @@ public class DiplomaService {
         Diploma diploma = diplomaMapper.toDiploma(request);
         Student student = studentRepository.findByStudentId(request.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         log.info("Student: {} ", student);
+        student.setGraduationStatus("Da Tot Nghiep");
         diploma.setStudent(student);
         //save diploma
         try {

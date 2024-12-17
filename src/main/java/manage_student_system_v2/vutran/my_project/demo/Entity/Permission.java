@@ -27,4 +27,5 @@ public class Permission {
     @ManyToMany(mappedBy = "permissionSet", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonBackReference
     Set<Role> roleSet;
+
 }
