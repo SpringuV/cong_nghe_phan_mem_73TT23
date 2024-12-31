@@ -12,6 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface UserMapper {
     User toUser(UserCreationRequest request);
 
+    @Mapping(target = "roles", source = "roles")
     UserResponse toUserResponse(User user);
 
     @Mapping(target = "roles", ignore = true)

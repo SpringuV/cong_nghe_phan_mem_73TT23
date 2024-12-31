@@ -1,0 +1,138 @@
+/* Toàn bộ trang */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+a {
+    text-decoration: none;
+    color:#1693E3;
+}
+
+
+/* Header */
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+header .login-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+header .login-btn button {
+    background-color: white;
+    color: #007bff;
+    border: 2px solid white;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+header .login-btn button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Tiêu đề */
+.title {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Khu vực tìm kiếm */
+.search-bar {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.search-bar input {
+    padding: 12px;
+    width: 320px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+.search-bar input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+.search-bar button {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.search-bar button:hover {
+    background-color: #218838;
+}
+
+/* Khu vực kết quả */
+.result {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+.box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+}
+.box h3 {
+    color: #007bff;
+    margin-bottom: 15px;
+}
+.box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.box table th,
+.box table td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: left;
+}
+.box table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+/* Nút Home */
+.home {
+    text-align: center;
+    margin-top: 30px;
+}
+.home button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.home button:hover {
+    background-color: #0056b3;
+}

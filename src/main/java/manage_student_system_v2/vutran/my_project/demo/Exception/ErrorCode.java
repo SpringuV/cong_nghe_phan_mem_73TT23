@@ -15,7 +15,7 @@ public enum ErrorCode {
     PASSWORD_INVALID(108, "Password at least {min} characters", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(109, "Username at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_KEY(110, "Uncategorized error", HttpStatus.BAD_REQUEST),
-    INVALID_DOB(111, "Your name must be at least {min}", HttpStatus.BAD_REQUEST),
+    INVALID_DOB(111, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INVALID_OLD_PASSWORD(112, "Your old password incorrect !", HttpStatus.BAD_REQUEST),
     STUDENT_NOT_FOUND(113, "Student not found !", HttpStatus.NOT_FOUND),
     DIPLOMA_NOT_FOUND(103, "Diploma not found !", HttpStatus.NOT_FOUND),

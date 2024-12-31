@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý thông tin Sinh Viên</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/fontend_QLVBCC/assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/fontend_QLVBCC/assets/css/student.css">
+</head>
+
+<body>
+  <!-- side bar -->
+  <div id="sidebar-container"></div>
+  <!-- end side bar -->
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="page-title">Quản lý thông tin sinh viên</h1>
+
+    <!-- Button to Open Modal -->
+    <button class="open-modal-btn" onclick="openModal()">
+      Lưu thông tin
+    </button>
+
+    <!-- Modal to Add/Update student-ids -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>Thêm/Cập nhật chứng chỉ</h2>
+        <form id="certificate-form">
+          <label for="certificate-id">Mã sinh viên:</label>
+          <input type="text" id="student-id" placeholder="Nhập mã sinh viên" required />
+
+          <label for="student-id-name">Tên sinh viên:</label>
+          <input type="text" id="student-id-name" placeholder="Nhập tên sinh viên" required />
+
+          <label for="student-id-type">Khoa:</label>
+          <select id="student-id-type">
+            <option value="CNTT">CNTT</option>
+            <option value="HTTT">HTTT</option>
+            <option value="Khác">Khác</option>
+          </select>
+
+          <label for="student-name">Lớp:</label>
+          <input type="text" id="student-name" placeholder="Nhập tên lớp" required />
+
+          <label for="student-id">Email:</label>
+          <input type="text" id="student-id" placeholder="Nhập email" required />
+
+          <label for="issue-date">Ngày sinh:</label>
+          <input type="date" id="issue-date" required />
+
+          <button type="submit">Lưu thông tin</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Table to Display student-ids -->
+    <div class="table-container">
+      <h2>Danh sách sinh viên</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Sinh viên</th>
+            <th>Tên Sinh viên</th>
+            <th>Khoa</th>
+            <th>Lớp</th>
+            <th>Email</th>
+            <th>Ngày sinh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CC001</td>
+            <td>Trần Thanh Tùng</td>
+            <td>CNTT</td>
+            <td>73DCTT23</td>
+            <td>ttt@gmail.com</td>
+            <td>2004-12-01</td>
+            <td>
+              <button class="edit-btn">Sửa</button>
+              <button class="delete-btn">Xóa</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</body>
+<script src="/fontend_QLVBCC/assets/js/authToken.js"></script>
+<script src="/fontend_QLVBCC/assets/js/sidebar.js"></script>
+<script src="/fontend_QLVBCC/assets/js/student.js"></script>
+
+</html>

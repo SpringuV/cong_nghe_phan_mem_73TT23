@@ -117,10 +117,10 @@ public class StudentService {
 
         // set Certificate
         List<String> certificates = studentUpdateRequest.getCertificateName();
-        Set<Certificate>  certificateSet = certificates.stream().map(certificateName -> certificateRepository.findByNameCertificate(certificateName).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
+        Set<Certificate>  certificateSet = certificates
+                .stream()
+                .map(certificateName -> certificateRepository.findByNameCertificate(certificateName).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
-
-        // update time
         student.setUpdateAt(LocalDate.now());
         //save
         student = studentRepository.save(student);

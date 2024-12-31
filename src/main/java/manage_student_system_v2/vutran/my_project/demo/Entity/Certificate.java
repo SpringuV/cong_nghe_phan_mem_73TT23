@@ -22,10 +22,13 @@ import java.util.Set;
 public class Certificate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @Column(name = "name_certificate", unique = true, nullable = false)
     String nameCertificate;
 
-    @Column(name = "issue_date", nullable = false)
+    @Column(name = "issue_date")
     LocalDate issueDate; // ngay cap
 
     @Column(name = "description")
@@ -34,7 +37,8 @@ public class Certificate {
     @Column(name = "certificate_type", nullable = false)
     String certificateType;
 
-    @ManyToMany(mappedBy = "certificateSet", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "student_id")
     @JsonBackReference
-    Set<Student> studentSet;
+    Student student;
 }

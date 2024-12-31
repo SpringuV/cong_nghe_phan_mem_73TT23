@@ -16,5 +16,6 @@ public class CertificateCreationRequest {
     String nameCertificate;
     LocalDate issueDate; // ngay cap
     String description;
+    String studentId;
     String certificateType;
 }

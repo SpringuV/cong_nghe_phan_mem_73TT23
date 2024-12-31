@@ -58,7 +58,6 @@ public class AuthenticationService {
     @Value("${jwt.refreshable-duration}")
     private long REFRESHABLE_DURATION;
 
-
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest){
         User user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 

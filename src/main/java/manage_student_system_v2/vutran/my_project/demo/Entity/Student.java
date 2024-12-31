@@ -35,12 +35,17 @@ public class Student extends User{
     @Column(name = "update_at")
     LocalDate updateAt;
 
+    @Column(name = "certificate_type", nullable = false)
+    String certificateType;
+
+    @Column(name = "issue_date")
+    LocalDate issueDateCertificate; // ngay cap
+
     @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonManagedReference
     Set<Diploma> diplomaSet;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "student_certificate", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "name_certificate"))
+    @OneToMany(mappedBy = "student", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonManagedReference
     Set<Certificate> certificateSet;
 }

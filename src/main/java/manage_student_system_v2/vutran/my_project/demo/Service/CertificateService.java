@@ -6,10 +6,12 @@ import lombok.experimental.FieldDefaults;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.CertificateCreationRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.CertificateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Certificate;
+import manage_student_system_v2.vutran.my_project.demo.Entity.Student;
 import manage_student_system_v2.vutran.my_project.demo.Exception.AppException;
 import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.CertificateMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.CertificateRepository;
+import manage_student_system_v2.vutran.my_project.demo.Repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +25,14 @@ import java.util.stream.Collectors;
 public class CertificateService {
 
     CertificateRepository certificateRepository;
+    StudentRepository studentRepository;
     CertificateMapper certificateMapper;
 
     public CertificateResponse createCertificate(CertificateCreationRequest request){
-        // check exist
-        if(certificateRepository.existsByNameCertificate(request.getNameCertificate())){
-            throw new AppException(ErrorCode.CERTIFICATE_EXISTED);
-        }
+        // check student
+        Student student = studentRepository.findByStudentId(request.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         Certificate certificate = certificateMapper.toCertificate(request);
+        certificate.setStudent(student);
 
         // save
         certificateRepository.save(certificate);
@@ -61,7 +63,6 @@ public class CertificateService {
         // save
         certificateRepository.save(certificate);
         return certificateMapper.toCertificateResponse(certificate);
-
     }
 
 }
