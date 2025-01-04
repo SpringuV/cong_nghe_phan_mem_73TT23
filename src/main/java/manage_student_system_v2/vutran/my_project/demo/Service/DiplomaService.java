@@ -38,8 +38,14 @@ public class DiplomaService {
     StudentMapper studentMapper;
 
     public DiplomaResponse createDiploma(DiplomaCreationRequest request){
+        // check diploma exist
+        boolean existDiploma = diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(request.getDegreeType(), request.getMajor(), request.getStudentId());
+        if(existDiploma){
+            throw new AppException(ErrorCode.DIPLOMA_EXISTED);
+        }
         Diploma diploma = diplomaMapper.toDiploma(request);
         Student student = studentRepository.findByStudentId(request.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+
         log.info("Student: {} ", student);
         student.setGraduationStatus("Da Tot Nghiep");
         diploma.setStudent(student);
@@ -51,6 +57,10 @@ public class DiplomaService {
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
         }
         return diplomaMapper.toDiplomaResponse(diploma);
+    }
+
+    public Set<DiplomaResponse> getListDiploma(){
+        return diplomaRepository.findAll().stream().map(diplomaMapper::toDiplomaResponse).collect(Collectors.toSet());
     }
 
     public DiplomaResponse getDiplomaByID(String idDiploma){
@@ -79,9 +89,9 @@ public class DiplomaService {
         return "Deleted Diploma id: " + id;
     }
 
-    public DiplomaResponse updateDiploma(DiplomaCreationRequest creationRequest){
+    public DiplomaResponse updateDiploma(String id, DiplomaCreationRequest creationRequest){
         // check diploma
-        Diploma diploma = diplomaRepository.findByMajorAndStudent_StudentId(creationRequest.getMajor(), creationRequest.getStudentId()).orElseThrow(() -> new AppException(ErrorCode.DIPLOMA_NOT_FOUND));
+        Diploma diploma = diplomaRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.DIPLOMA_NOT_FOUND));
         diplomaMapper.updateDiploma(diploma, creationRequest);
         // set student
         diploma.setStudent(studentRepository.findByStudentId(creationRequest.getStudentId()).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND)));

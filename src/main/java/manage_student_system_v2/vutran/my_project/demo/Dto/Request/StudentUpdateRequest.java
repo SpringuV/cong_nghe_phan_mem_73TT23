@@ -16,14 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentUpdateRequest {
-    String studentId;
+    String graduationStatus;
     String lastName;
     String firstName;
-    String graduationStatus;
+    String departmentName;
+    String yearAdmission;
+    String yearGraduation;
+    String email;
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
-
-    List<String> certificateName;
-    List<DiplomaCreationRequest> diplomaCreate;
+    List<CertificateCreateInStudentRequest> certificateList;
+    List<DiplomaCreateInStudentRequest> diplomaList;
 }

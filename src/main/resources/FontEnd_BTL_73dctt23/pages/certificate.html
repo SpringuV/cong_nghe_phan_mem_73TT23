@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quản lý thông tin chứng chỉ</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="/fontend_QLVBCC/assets/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="/fontend_QLVBCC/assets/css/certificate.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/certificate.css" />
 </head>
 
 <body>
@@ -23,14 +23,15 @@
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close-btn" onclick="closeModal()">&times;</span>
-                <h2>Thêm/Cập nhật chứng chỉ</h2>
+                <h2>Thêm mới chứng chỉ</h2>
                 <form id="certificate-form">
+                    <input type="hidden" id="certificate-id" value="0"> <!-- Trường ẩn -->
                     <div>
-                        <label for="certificate-name">Tên chứng chỉ:</label>
-                        <input type="text" id="certificate-name" placeholder="Nhập tên chứng chỉ" required />   
+                        <label for="certificate-name">Tên chứng chỉ</label>
+                        <input type="text" id="certificate-name" placeholder="Nhập tên chứng chỉ" required />
                     </div>
                     <div>
-                        <label for="certificate-type">Loại chứng chỉ:</label>
+                        <label for="certificate-type">Loại chứng chỉ</label>
                         <select id="certificate-type">
                             <option value="Ngoại ngữ">Ngoại ngữ</option>
                             <option value="Tin học">Tin học</option>
@@ -38,54 +39,51 @@
                         </select>
                     </div>
                     <div>
-                        <label for="issue-date">Ngày cấp:</label>
+                        <label for="issue-date">Ngày cấp</label>
                         <input type="date" id="issue-date" required />
                     </div>
                     <div>
-                        <label for="student_id">Mã Sinh Viên:</label>
-                        <input type="text" id="certificate-name" placeholder="Nhập tên chứng chỉ" required />   
+                        <label for="student_id">Mã Sinh Viên</label>
+                        <input type="text" id="student_id" placeholder="Nhập mã sinh viên" required />
+                    </div>
+                    <div>
+                        <label for="description">Mô tả (nếu có)</label>
+                        <textarea id="description"></textarea>
                     </div>
                     <button type="submit">Lưu thông tin</button>
                 </form>
             </div>
         </div>
-
+        
         <!-- Table to Display Certificates -->
         <div class="table-container">
             <h2>Danh sách chứng chỉ</h2>
             <table>
                 <thead>
                     <tr>
+                        <th>Mã CC</th>
                         <th>Tên chứng chỉ</th>
                         <th>Loại chứng chỉ</th>
                         <th>Ngày cấp</th>
+                        <th>Mã Sinh Viên</th>
+                        <th>Mô tả</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <!-- <td>CC001</td> -->
-                        <td>Chứng chỉ Tin học</td>
-                        <td>Tin học</td>
-                        <td>2024-12-01</td>
-                        <td>
-                            <button class="edit-btn">Sửa</button>
-                            <button class="delete-btn">Xóa</button>
-                        </td>
-                    </tr>
+                <tbody id="certificate-table-body">
                 </tbody>
             </table>
         </div>
         <!-- Button to Open Modal -->
         <div class="btn">
-            <button class="open-modal-btn" onclick="openModal()">
+            <button class="open-modal-btn" onclick="openModalCertificate('create')">
                 Thêm mới chứng chỉ
             </button>
         </div>
     </div>
 </body>
-<script src="/fontend_QLVBCC/assets/js/authToken.js"></script>
-<script src="/fontend_QLVBCC/assets/js/sidebar.js"></script>
-<script src="/fontend_QLVBCC/assets/js/student.js"></script>
+<script src="/assets/js/authToken.js"></script>
+<script src="/assets/js/modal_sidebar.js"></script>
+<script src="/assets/js/certificate.js"></script>
 
 </html>

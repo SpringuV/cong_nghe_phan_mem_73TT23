@@ -40,6 +40,10 @@ public class CertificateService {
         return certificateMapper.toCertificateResponse(certificate);
     }
 
+    public CertificateResponse getCertificateById(String id){
+        return certificateRepository.findById(id).map(certificateMapper::toCertificateResponse).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
+    }
+
     public CertificateResponse getCertificateByName(String nameCertificate){
         Certificate certificate = certificateRepository.findByNameCertificate(nameCertificate).orElseThrow(()-> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
         return certificateMapper.toCertificateResponse(certificate);
@@ -56,10 +60,12 @@ public class CertificateService {
         return "Deleted Certificate: " + certificate.getNameCertificate();
     }
 
-    public CertificateResponse updateCertificate(CertificateCreationRequest certificateCreationRequest){
+    public CertificateResponse updateCertificate(String id, CertificateCreationRequest certificateCreationRequest){
         // check id
-        Certificate certificate = certificateRepository.findById(certificateCreationRequest.getNameCertificate()).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
+        Certificate certificate = certificateRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND));
         certificateMapper.updateCertificate(certificate, certificateCreationRequest);
+
+        certificate.setStudent(studentRepository.findByStudentId(certificateCreationRequest.getStudentId()).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND)));
         // save
         certificateRepository.save(certificate);
         return certificateMapper.toCertificateResponse(certificate);

@@ -26,6 +26,14 @@ public class CertificateController {
                 .build();
     }
 
+    @GetMapping("/{certificateId}")
+    ApiResponse<CertificateResponse> getCertificateById(@PathVariable("certificateId") String idCertificate){
+        return ApiResponse.<CertificateResponse>builder()
+                .result(certificateService.getCertificateById(idCertificate))
+                .build();
+    }
+
+
     @GetMapping("/{certificateName}")
     ApiResponse<CertificateResponse> getCertificateByName(@PathVariable("certificateName") String nameCertificate){
         return ApiResponse.<CertificateResponse>builder()
@@ -47,10 +55,10 @@ public class CertificateController {
                 .build();
     }
 
-    @PutMapping
-    ApiResponse<CertificateResponse> updateCertificate(@RequestBody CertificateCreationRequest certificateCreationRequest){
+    @PutMapping("/{certificateId}")
+    ApiResponse<CertificateResponse> updateCertificate(@PathVariable("certificateId") String id, @RequestBody CertificateCreationRequest certificateCreationRequest){
         return ApiResponse.<CertificateResponse>builder()
-                .result(certificateService.updateCertificate(certificateCreationRequest))
+                .result(certificateService.updateCertificate(id, certificateCreationRequest))
                 .build();
     }
 }

@@ -31,7 +31,7 @@ async function xulyDangNhap(event) {
         localStorage.setItem("token", data.result.token);
 
         // Chuyển hướng đến trang chủ
-        window.location.href = "/fontend_QLVBCC/pages/certificate.html";
+        window.location.href = "/pages/certificate.html";
       } else {
         // Nếu phản hồi không thành công
         const errorText = await response.text();

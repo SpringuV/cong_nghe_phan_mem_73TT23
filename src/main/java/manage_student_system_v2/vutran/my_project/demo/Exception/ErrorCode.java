@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     UNCATEGORIZED_EXCEPTION(101, "Uncategorized exception !", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_EXISTED(102, "User existed !", HttpStatus.BAD_REQUEST),
+    STUDENT_EXISTED(102, "Student existed !", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(103, "User not found !", HttpStatus.NOT_FOUND),
     UN_AUTHENTICATED(104, "Un Authenticated", HttpStatus.UNAUTHORIZED),
     USER_NOT_EXIST(105, "User not exist", HttpStatus.BAD_REQUEST),

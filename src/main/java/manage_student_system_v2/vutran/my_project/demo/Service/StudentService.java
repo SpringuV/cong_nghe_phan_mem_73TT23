@@ -3,22 +3,19 @@ package manage_student_system_v2.vutran.my_project.demo.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import manage_student_system_v2.vutran.my_project.demo.Constant.PredefinedRole;
-import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreateRequest;
-import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentDeleteRequest;
-import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
-import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentResponse;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Request.*;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Response.CertificateResponse;
+import manage_student_system_v2.vutran.my_project.demo.Dto.Response.DiplomaResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.*;
 import manage_student_system_v2.vutran.my_project.demo.Exception.AppException;
 import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
+import manage_student_system_v2.vutran.my_project.demo.Mapper.CertificateMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.DiplomaMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.StudentMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,28 +39,21 @@ public class StudentService {
     PasswordEncoder passwordEncoder;
     DiplomaRepository diplomaRepository;
     CertificateRepository certificateRepository;
+    CertificateMapper certificateMapper;
     DiplomaMapper diplomaMapper;
 
-    public StudentResponse createStudent(StudentCreateRequest createRequest){
+    public StudentUpdateResponse createStudent(StudentCreateRequest createRequest){
 
-        if(studentRepository.existsByUsername(createRequest.getUsername())){
-            throw new AppException(ErrorCode.USER_EXISTED);
+        if(studentRepository.existsByStudentId(createRequest.getStudentId())){
+            throw new AppException(ErrorCode.STUDENT_EXISTED);
         }
 
         Student student = studentMapper.toStudent(createRequest);
-
-        // set role
-        Set<Role> roleSet= new HashSet<>();
-        roleRepository.findById(PredefinedRole.STUDENT_ROLE).ifPresent(roleSet::add);
-        student.setRoles(roleSet);
 
         // set Create at
         student.setCreatedAt(LocalDate.now());
         // set graduationStatus
         student.setGraduationStatus(createRequest.getGraduationStatus());
-
-        //set password
-        student.setPassword(passwordEncoder.encode(createRequest.getPassword()));
 
         try{
             studentRepository.save(student);
@@ -73,35 +63,27 @@ public class StudentService {
         return studentMapper.toStudentResponse(student);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<StudentResponse> getListStudent(){
-        return studentRepository.findAll().stream().map(studentMapper::toStudentResponse).toList();
+//    @PreAuthorize("hasRole('ADMIN')")
+    public List<StudentUpdateResponse> getListStudent(){
+        return studentRepository.findAll().stream().map(studentMapper::toStudentUpdateResponse).toList();
     }
 
-    public StudentResponse getInfoStudent(){
-        // sau khi user login success sẽ được lưu thông tin đăng nhập tại security context holder
-        SecurityContext context = SecurityContextHolder.getContext();
-        String name =context.getAuthentication().getName();
-        Student student = studentRepository.findByUsername(name).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXIST));
-        return studentMapper.toStudentResponse(student);
-    }
-
-//    @PreAuthorize("#studentUpdateRequest.studentId == principal.username || hasRole('ADMIN')") // được phép khi là chủ tài khoản hoặc admin
-    public StudentUpdateResponse updateStudent(StudentUpdateRequest studentUpdateRequest){
+    public StudentUpdateResponse updateStudent(String id, StudentUpdateRequest studentUpdateRequest){
+        System.out.println("dang trong ham update student");
         // check id
-        Student student = studentRepository.findByStudentId(studentUpdateRequest.getStudentId()).orElseThrow(()->new AppException(ErrorCode.STUDENT_NOT_FOUND));
+        Student student = studentRepository.findByStudentId(id).orElseThrow(()->new AppException(ErrorCode.STUDENT_NOT_FOUND));
         studentMapper.updateStudent(student, studentUpdateRequest);
+        Student finalStudent = student;
         // set Diploma
         AtomicBoolean checkDiploma = new AtomicBoolean(false);
         Set<Diploma> diplomaSet = new HashSet<>();
-        studentUpdateRequest.getDiplomaCreate().forEach(
+        studentUpdateRequest.getDiplomaList().forEach(
             diplomaRequest -> {
                 // check diploma existed
-                if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), diplomaRequest.getStudentId())){
-                    Student studentCheck = studentRepository.findByStudentId(diplomaRequest.getStudentId()).orElseThrow(()-> new AppException(ErrorCode.STUDENT_NOT_FOUND));
-                    Diploma diploma = diplomaMapper.toDiploma(diplomaRequest);
+                if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), id)){
+                    Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
                     // save diploma
-                    diploma.setStudent(studentCheck);
+                    diploma.setStudent(finalStudent);
                     //save
                     diplomaRepository.save(diploma);
                     //add set
@@ -116,16 +98,32 @@ public class StudentService {
         }
 
         // set Certificate
-        List<String> certificates = studentUpdateRequest.getCertificateName();
+        List<CertificateCreateInStudentRequest> certificates = studentUpdateRequest.getCertificateList();
         Set<Certificate>  certificateSet = certificates
                 .stream()
-                .map(certificateName -> certificateRepository.findByNameCertificate(certificateName).orElseThrow(() -> new AppException(ErrorCode.CERTIFICATE_NOT_FOUND))).collect(Collectors.toSet());
+                .map(request -> {
+                    Certificate certificate = certificateMapper.toCertificateFromStudentRequest(request);
+                    certificate.setStudent(finalStudent);
+                    return certificateRepository.save(certificate); // luu tung chung chi
+                }).collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
         student.setUpdateAt(LocalDate.now());
         //save
         student = studentRepository.save(student);
 
         return studentMapper.toStudentUpdateResponse(student);
+    }
+
+    public StudentUpdateResponse getStudent(String id){
+        StudentUpdateResponse studentUpdateResponse = new StudentUpdateResponse();
+        studentUpdateResponse = studentMapper.toStudentUpdateResponse(studentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND)));
+        for(CertificateResponse certificateResponse : studentUpdateResponse.getCertificates()){
+            certificateResponse.setStudentId(id);
+        }
+        for(DiplomaResponse diplomaResponse : studentUpdateResponse.getDiplomas()){
+            diplomaResponse.setStudentId(id);
+        }
+        return  studentUpdateResponse;
     }
 
     public String deleteStudent(StudentDeleteRequest deleteRequest){

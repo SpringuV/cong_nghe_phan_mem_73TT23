@@ -14,16 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentCreateRequest {
-
-    @Size(min = 8, message = "USERNAME_INVALID")
-    String username;
-    @Size(min = 8, message = "PASSWORD_INVALID")
-    String password;
     String studentId;
     String graduationStatus;
     String lastName;
     String firstName;
-
+    String departmentName;
+    String yearAdmission;
+    String yearGraduation;
+    String email;
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;

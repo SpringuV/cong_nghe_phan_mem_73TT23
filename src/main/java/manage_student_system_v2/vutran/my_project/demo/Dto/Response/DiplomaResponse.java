@@ -13,12 +13,10 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DiplomaResponse {
-
     String diplomaId;
     String major;
     String degreeType;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate issueDate;
-    StudentResponse student;
+    String issueDate;
+    String studentId;
 
 }

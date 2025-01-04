@@ -8,7 +8,6 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreate
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentDeleteRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ApiResponse;
-import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Service.StudentService;
 import org.springframework.web.bind.annotation.*;
@@ -24,28 +23,30 @@ public class StudentController {
     StudentService studentService;
 
     @PostMapping
-    ApiResponse<StudentResponse> createStudent(@RequestBody @Valid StudentCreateRequest request){
-        return ApiResponse.<StudentResponse>builder()
+    ApiResponse<StudentUpdateResponse> createStudent(@RequestBody @Valid StudentCreateRequest request){
+        return ApiResponse.<StudentUpdateResponse>builder()
                 .result(studentService.createStudent(request))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<StudentResponse>> getListStudent(){
-        return ApiResponse.<List<StudentResponse>>builder()
+    ApiResponse<List<StudentUpdateResponse>> getListStudent(){
+        return ApiResponse.<List<StudentUpdateResponse>>builder()
                 .result(studentService.getListStudent())
                 .build();
     }
 
-    @GetMapping("/info-student")
-    ApiResponse<StudentResponse> getInfoStudent(){
-        return ApiResponse.<StudentResponse>builder().build();
+    @GetMapping("/{studentId}")
+    ApiResponse<StudentUpdateResponse> getStudent(@PathVariable("studentId") String id){
+        return ApiResponse.<StudentUpdateResponse>builder()
+                .result(studentService.getStudent(id))
+                .build();
     }
 
-    @PutMapping("/update")
-    ApiResponse<StudentUpdateResponse> updateStudent(@RequestBody StudentUpdateRequest studentUpdateRequest){
+    @PutMapping("/update/{studentId}")
+    ApiResponse<StudentUpdateResponse> updateStudent(@PathVariable("studentId") String id, @RequestBody StudentUpdateRequest studentUpdateRequest){
         return ApiResponse.<StudentUpdateResponse>builder()
-                .result(studentService.updateStudent(studentUpdateRequest))
+                .result(studentService.updateStudent(id,studentUpdateRequest))
                 .build();
     }
 

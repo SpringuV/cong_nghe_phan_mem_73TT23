@@ -59,8 +59,7 @@ async function logout() {
     console.log(token);
 
     if(!token){
-        alert("Không tìm thấy token đăng nhập!");
-        window.location.href = "/fontend_QLVBCC/index.html"; // chuyển hướng về trang index
+        window.location.href = "/index.html"; // chuyển hướng về trang index
         return;
     }
     try{
@@ -91,6 +90,28 @@ async function logout() {
     } finally {
         // Xóa token khỏi localStorage bất kể backend có xử lý thành công hay không
         localStorage.removeItem("token");
-        window.location.href = "/fontend_QLVBCC/index.html"; // Chuyển hướng về trang index search
+        window.location.href = "/index.html"; // Chuyển hướng về trang index search
     }
 }
+
+function isTokenExpired(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp < now;
+}
+
+function checkSession() {
+    const token = localStorage.getItem("token");
+    if (!token || isTokenExpired(token)) {
+        alert("Phiên đăng nhập đã hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.");
+        localStorage.removeItem('token');
+        window.href="/index.html";  
+    }
+}
+
+
+// Gọi hàm kiểm tra khi trang được tải
+window.onload = () => {
+    checkSession();
+    showUserInfo(); // Hiển thị thông tin người dùng nếu token hợp lệ
+};

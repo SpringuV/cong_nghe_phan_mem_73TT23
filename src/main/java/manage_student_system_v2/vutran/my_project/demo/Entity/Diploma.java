@@ -32,7 +32,7 @@ public class Diploma {
     String degreeType; // loai bang: cu nhan, thac si, ki su, tien si,...
 
     @Column(name = "issue_date", nullable = false)
-    LocalDate issueDate; // ngay cap bang
+    String issueDate; // nam cap bang
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonBackReference

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý thông tin Sinh Viên</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/assets/css/student.css">
+</head>
+
+<body>
+  <!-- side bar -->
+  <div id="sidebar-container"></div>
+  <!-- end side bar -->
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="page-title">Quản lý thông tin sinh viên</h1>
+    <!-- Modal to Add/Update student-ids -->
+    <div id="studentModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeStudentModal()">&times;</span>
+        <h2 id="modal-title">Thêm sinh viên</h2>
+        <form id="student-form">
+          <div>
+            <label for="student-id">Mã sinh viên:</label>
+            <input type="text" id="student-id" placeholder="Nhập mã sinh viên" />
+          </div>
+          <div>
+            <label for="student-last-name">Họ và tên đệm:</label>
+            <input type="text" id="student-last-name" placeholder="Nhập họ và tên đệm sinh viên" required />
+          </div>
+          <div>
+            <label for="student-first-name">Tên sinh viên:</label>
+            <input type="text" id="student-first-name" placeholder="Nhập tên sinh viên" required />
+          </div>
+          <div>
+            <label for="student-department">Khoa:</label>
+            <select id="student-department">
+              <option value="none">Chọn khoa</option>
+              <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+              <option value="Công trình">Công trình</option>
+              <option value="Kinh tế vận tải">Kinh tế vận tải</option>
+              <option value="Khoa học ứng dụng">Khoa học ứng dụng</option>
+              <option value="Khoa cơ khí">Khoa cơ khí</option>
+            </select>
+          </div>
+          <div>
+            <label for="student-graduation-status">Trạng thái:</label>
+            <select id="student-graduation-status">
+              <option value="none">Chọn trạng thái</option>
+              <option value="Đã tốt nghiệp">Đã tốt nghiệp</option>
+              <option value="Đang học">Đang học</option>
+              <option value="Nghỉ học">Nghỉ học</option>
+              <option value="Bảo lưu">Bảo lưu</option>
+            </select>
+          </div>
+          <div>
+            <label for="student-year-admission">Năm nhập học: </label>
+            <input type="text" id="student-year-admission" placeholder="Nhập năm nhập học" min="1980" max="2100"
+              required />
+          </div>
+          <div>
+            <label for="student-year-graduation">Năm tốt nghiệp (nếu có): </label>
+            <input type="text" id="student-year-graduation" placeholder="Nhập năm tốt nghiệp" min="1980" max="2100" />
+          </div>
+          <div>
+            <label for="student-email">Email:</label>
+            <input type="email" id="student-email" placeholder="Nhập email" required />
+          </div>
+          <div>
+            <label for="dob">Ngày sinh:</label>
+            <input type="date" id="dob" required />
+          </div>
+          <!-- Chứng chỉ -->
+          <div>
+            <h3>Danh sách chứng chỉ</h3>
+            <div>
+              <label for="certificate-count">Số lượng chứng chỉ:</label>
+              <input type="number" id="certificate-count" placeholder="Nhập số lượng chứng chỉ" min="1" />
+            </div>
+            <div id="certificate-inputs-container">
+              <!-- Nơi hiển thị mẫu nhập chứng chỉ -->
+            </div>
+          </div>
+
+          <!-- Bằng tốt nghiệp -->
+          <div>
+            <h3>Bằng tốt nghiệp</h3>
+            <div>
+              <label for="degree-count">Số lượng bằng tốt nghiệp:</label>
+              <input type="number" id="degree-count" placeholder="Nhập số lượng bằng tốt nghiệp" min="1" />
+            </div>
+            <div id="degree-inputs-container">
+              <!-- Nơi hiển thị mẫu nhập bằng tốt nghiệp -->
+            </div>
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- modal detail -->
+    <div id="detailModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeDetailModal()">&times;</span>
+        <h2>Thông tin chi tiết</h2>
+        <p><strong>Mã sinh viên:</strong> <span id="detail-student-id"></span></p>
+        <p><strong>Họ và tên:</strong> <span id="detail-student-name"></span></p>
+        <p><strong>Khoa:</strong> <span id="detail-student-department"></span></p>
+        <p><strong>Trạng thái:</strong> <span id="detail-student-status"></span></p>
+        <p><strong>Năm nhập học:</strong> <span id="detail-student-admission"></span></p>
+        <p><strong>Năm tốt nghiệp:</strong> <span id="detail-student-graduation"></span></p>
+        <p><strong>Ngày sinh:</strong> <span id="detail-dob"></span></p>
+        <p><strong>Email:</strong> <span id="detail-email"></span></p>
+        <div class="action-buttons">
+          <button onclick="editStudentFromDetail()">Sửa</button>
+          <button onclick="deleteStudentFromDetail()">Xóa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table to Display student-ids -->
+    <div class="table-container">
+      <h2>Danh sách sinh viên</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Sinh viên</th>
+            <th>Tên Sinh viên</th>
+            <th>Khoa</th>
+            <th>Trạng thái tốt nghiệp</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="student-table-body">
+        </tbody>
+      </table>
+    </div>
+    <!-- Button to Open Modal -->
+    <button class="open-modal-btn" onclick="openModalStudent()">Thêm mới sinh viên</button>
+  </div>
+
+
+</body>
+<!-- Đảm bảo tất cả tệp JavaScript được tải sau khi DOM đã được định nghĩa. Thêm thuộc tính defer vào thẻ <script> để đảm bảo tệp JavaScript được tải sau khi HTML được phân tích. -->
+<script src="/assets/js/authToken.js" defer></script>
+<script src="/assets/js/student.js" defer></script>
+<script src="/assets/js/modal_sidebar.js" defer></script>
+
+
+</html>

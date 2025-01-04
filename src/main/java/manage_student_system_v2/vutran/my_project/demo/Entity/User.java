@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 import java.util.Set;
 
-@SuperBuilder
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)

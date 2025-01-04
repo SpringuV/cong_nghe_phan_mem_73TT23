@@ -19,19 +19,22 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StudentUpdateResponse {
-
-    String id;
-    String username;
     String studentId;
     String lastName;
     String firstName;
+    String departmentName;
+    String yearAdmission;
+    String yearGraduation;
     String graduationStatus;
+    String email;
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate updateAt;
 
-    Set<CertificateResponse> certificates = new HashSet<>();
-    Set<DiplomaResponse> diplomas = new HashSet<>();
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    LocalDate createAt;
+    Set<CertificateResponse> certificates;
+    Set<DiplomaResponse> diplomas;
 }

@@ -117,6 +117,16 @@ header .login-btn button:hover {
     background-color: #f8f9fa;
     font-weight: bold;
 }
+/* nổi bật tiêu đề */
+.degree-title,
+.certificate-title {
+  font-weight: bold;
+  text-align: center;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ddd;
+  padding: 8px 0;
+}
+
 
 /* Nút Home */
 .home {

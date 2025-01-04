@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý thông tin văn bằng</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/diploma.css" />
+</head>
+
+<body>
+    <!-- side bar -->
+    <div id="sidebar-container"></div>
+    <!-- end side bar -->
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="page-title">Quản lý thông tin văn bằng</h1>
+
+        <!-- Modal to Add/Update Certificates -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h2 id="degree-modal-title">Thêm/Cập nhật văn bằng</h2>
+                <form id="degree-form">
+                    <input type="hidden" id="degree-id" value="0"> <!-- Trường ẩn -->
+                    <div>
+                        <label for="degree-major">Ngành học:</label>
+                        <select id="degree-major">
+                            <option value="none">Chọn ngành học</option>
+                            <option value="Công nghệ thông tin">Công nghệ thông tin</option>
+                            <option value="Khoa học máy tính">Khoa học máy tính</option>
+                            <option value="Hệ thống thông tin">Hệ thống thông tin</option>
+                            <option value="Kỹ thuật phần mềm">Kỹ thuật phần mềm</option>
+                            <option value="Trí tuệ nhân tạo">Trí tuệ nhân tạo</option>
+                            <option value="An ninh mạng">An ninh mạng</option>
+                            <option value="Kỹ thuật máy tính">Kỹ thuật máy tính</option>
+                            <option value="Công nghệ robot và tự động hóa">Công nghệ robot và tự động hóa</option>
+                            <option value="Điện tử viễn thông">Điện tử viễn thông</option>
+                            <option value="Kỹ thuật điều khiển và tự động hóa">Kỹ thuật điều khiển và tự động hóa
+                            </option>
+
+                            <!-- Ngành kinh tế và quản trị -->
+                            <option value="Kinh tế học">Kinh tế học</option>
+                            <option value="Quản trị kinh doanh">Quản trị kinh doanh</option>
+                            <option value="Tài chính - Ngân hàng">Tài chính - Ngân hàng</option>
+                            <option value="Kế toán">Kế toán</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Thương mại điện tử">Thương mại điện tử</option>
+                            <option value="Quản trị nhân sự">Quản trị nhân sự</option>
+                            <option value="Logistics và quản lý chuỗi cung ứng">Logistics và quản lý chuỗi cung ứng
+                            </option>
+                            <option value="Kinh doanh quốc tế">Kinh doanh quốc tế</option>
+                            <option value="Quản trị du lịch và khách sạn">Quản trị du lịch và khách sạn</option>
+
+                            <!-- Ngành khoa học xã hội và nhân văn -->
+                            <option value="Ngôn ngữ Anh">Ngôn ngữ Anh</option>
+                            <option value="Ngôn ngữ Nhật">Ngôn ngữ Nhật</option>
+                            <option value="Ngôn ngữ Trung">Ngôn ngữ Trung</option>
+                            <option value="Quan hệ quốc tế">Quan hệ quốc tế</option>
+                            <option value="Truyền thông đa phương tiện">Truyền thông đa phương tiện</option>
+                            <option value="Báo chí">Báo chí</option>
+                            <option value="Luật kinh tế">Luật kinh tế</option>
+                            <option value="Luật quốc tế">Luật quốc tế</option>
+                            <option value="Công tác xã hội">Công tác xã hội</option>
+                            <option value="Văn học">Văn học</option>
+
+                            <!-- Ngành khoa học tự nhiên và ứng dụng -->
+                            <option value="Toán học">Toán học</option>
+                            <option value="Vật lý">Vật lý</option>
+                            <option value="Hóa học">Hóa học</option>
+                            <option value="Sinh học">Sinh học</option>
+                            <option value="Khoa học môi trường">Khoa học môi trường</option>
+                            <option value="Địa lý học">Địa lý học</option>
+                            <option value="Công nghệ sinh học">Công nghệ sinh học</option>
+                            <option value="Nông nghiệp và phát triển nông thôn">Nông nghiệp và phát triển nông thôn
+                            </option>
+                            <option value="Khoa học vật liệu">Khoa học vật liệu</option>
+                            <option value="Thủy sản và công nghệ chế biến">Thủy sản và công nghệ chế biến</option>
+
+                            <!-- Ngành y dược -->
+                            <option value="Y đa khoa">Y đa khoa</option>
+                            <option value="Răng - Hàm - Mặt">Răng - Hàm - Mặt</option>
+                            <option value="Dược học">Dược học</option>
+                            <option value="Điều dưỡng">Điều dưỡng</option>
+                            <option value="Y học cổ truyền">Y học cổ truyền</option>
+                            <option value="Kỹ thuật xét nghiệm y học">Kỹ thuật xét nghiệm y học</option>
+                            <option value="Công nghệ sinh học y học">Công nghệ sinh học y học</option>
+                            <option value="Kỹ thuật phục hồi chức năng">Kỹ thuật phục hồi chức năng</option>
+                            <option value="Khoa học dinh dưỡng">Khoa học dinh dưỡng</option>
+
+                            <!-- Ngành nghệ thuật và thiết kế -->
+                            <option value="Thiết kế đồ họa">Thiết kế đồ họa</option>
+                            <option value="Thiết kế thời trang">Thiết kế thời trang</option>
+                            <option value="Nghệ thuật sân khấu và điện ảnh">Nghệ thuật sân khấu và điện ảnh</option>
+                            <option value="Mỹ thuật công nghiệp">Mỹ thuật công nghiệp</option>
+                            <option value="Âm nhạc học">Âm nhạc học</option>
+                            <option value="Diễn viên kịch và điện ảnh">Diễn viên kịch và điện ảnh</option>
+                            <option value="Đạo diễn điện ảnh và truyền hình">Đạo diễn điện ảnh và truyền hình</option>
+                            <option value="Nhiếp ảnh">Nhiếp ảnh</option>
+                            <option value="Hội họa">Hội họa</option>
+
+                            <!-- Ngành kỹ thuật và xây dựng -->
+                            <option value="Kỹ thuật cơ khí">Kỹ thuật cơ khí</option>
+                            <option value="Kỹ thuật xây dựng">Kỹ thuật xây dựng</option>
+                            <option value="Kỹ thuật điện">Kỹ thuật điện</option>
+                            <option value="Kỹ thuật công trình thủy">Kỹ thuật công trình thủy</option>
+                            <option value="Kỹ thuật giao thông">Kỹ thuật giao thông</option>
+                            <option value="Kỹ thuật năng lượng">Kỹ thuật năng lượng</option>
+                            <option value="Công nghệ kỹ thuật ô tô">Công nghệ kỹ thuật ô tô</option>
+                            <option value="Công nghệ chế tạo máy">Công nghệ chế tạo máy</option>
+                            <option value="Vật liệu xây dựng">Vật liệu xây dựng</option>
+                            <option value="Cơ khí chế tạo">Cơ khí chế tạo</option>
+
+                            <!-- Ngành sư phạm -->
+                            <option value="Sư phạm Toán">Sư phạm Toán</option>
+                            <option value="Sư phạm Ngữ văn">Sư phạm Ngữ văn</option>
+                            <option value="Sư phạm Vật lý">Sư phạm Vật lý</option>
+                            <option value="Sư phạm Hóa học">Sư phạm Hóa học</option>
+                            <option value="Sư phạm Sinh học">Sư phạm Sinh học</option>
+                            <option value="Sư phạm Lịch sử">Sư phạm Lịch sử</option>
+                            <option value="Sư phạm Địa lý">Sư phạm Địa lý</option>
+                            <option value="Sư phạm Tiếng Anh">Sư phạm Tiếng Anh</option>
+                            <option value="Sư phạm Mầm non">Sư phạm Mầm non</option>
+                            <option value="Sư phạm Giáo dục thể chất">Sư phạm Giáo dục thể chất</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="degree-type">Loại văn bằng:</label>
+                        <select id="degree-type" required>
+                            <option value="none">Chọn loại văn bằng</option>
+                            <option value="Cử nhân">Cử nhân</option>
+                            <option value="Thạc sĩ">Thạc sĩ</option>
+                            <option value="Kĩ sư">Kĩ sư</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="issue-date">Năm cấp:</label>
+                        <input type="text" id="issue-date" required />
+                    </div>
+                    <div>
+                        <label for="student-id">Mã sinh viên:</label>
+                        <input type="text" id="student-id" required />
+                    </div>
+                    <button type="submit">Lưu thông tin</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table to Display Certificates -->
+        <div class="table-container">
+            <h2>Danh sách văn bằng</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã văn bằng</th>
+                        <th>Loại văn bằng</th>
+                        <th>Mã sinh viên</th>
+                        <th>Ngày cấp</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id = "degree-table-body">
+                </tbody>
+            </table>
+        </div>
+        <!-- Button to Open Modal -->
+        <div class="btn">
+            <button class="open-modal-btn" onclick="openDegreeModal()">
+                Thêm mới Văn bằng
+            </button>
+        </div>
+    </div>
+
+</body>
+<script src="/assets/js/authToken.js"></script>
+<script src="/assets/js/modal_sidebar.js"></script>
+<script src="/assets/js/diploma.js"></script>
+</html>

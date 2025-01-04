@@ -13,9 +13,11 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CertificateResponse {
+    String id;
     String nameCertificate;
     @JsonFormat(pattern = "yy-MM-dd")
     LocalDate issueDate; // ngay cap
     String description;
     String certificateType;
+    String studentId;
 }

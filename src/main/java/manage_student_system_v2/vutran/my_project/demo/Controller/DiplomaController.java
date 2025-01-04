@@ -29,6 +29,13 @@ public class DiplomaController {
                 .build();
     }
 
+    @GetMapping
+    ApiResponse<Set<DiplomaResponse>> getListDiploma(){
+        return ApiResponse.<Set<DiplomaResponse>>builder()
+                .result(diplomaService.getListDiploma())
+                .build();
+    }
+
     @GetMapping("/{idStudentId}")
     ApiResponse<Set<DiplomaResponse>> getlistDiplomaByStudentId(@PathVariable("idStudentId") String idStudentId){
         return ApiResponse.<Set<DiplomaResponse>>builder()
@@ -51,10 +58,10 @@ public class DiplomaController {
                 .build();
     }
 
-    @PutMapping
-    ApiResponse<DiplomaResponse> updateDiploma(@RequestBody DiplomaCreationRequest diplomaCreationRequest){
+    @PutMapping("/{diplomaId}")
+    ApiResponse<DiplomaResponse> updateDiploma(@PathVariable("diplomaId") String id,@RequestBody DiplomaCreationRequest diplomaCreationRequest){
         return ApiResponse.<DiplomaResponse>builder()
-                .result(diplomaService.updateDiploma(diplomaCreationRequest))
+                .result(diplomaService.updateDiploma(id, diplomaCreationRequest))
                 .build();
     }
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tra cứu thông tin tốt nghiệp</title>
+  <link rel="stylesheet" type="text/css" href="/assets/css/search.css" />
+</head>
+
+<body>
+  <header>
+    <div class="login-btn">
+      <button>
+        <a href="/pages/login.html">Đăng nhập</a>
+      </button>
+    </div>
+    <h1 class="title">Tra cứu thông tin tốt nghiệp</h1>
+  </header>
+
+  <main class="container">
+    <!-- Khu vực tìm kiếm -->
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Nhập mã sinh viên" />
+      <button id="search-button">Tìm kiếm</button>
+    </div>
+
+    <!-- Khu vực kết quả -->
+    <div class="result">
+      <!-- Thông tin sinh viên -->
+      <div class="box">
+        <h3>Thông tin Sinh viên</h3>
+        <table>
+          <tbody id="data-student">
+            <tr>
+              <th>Thông tin</th>
+              <th>Chi tiết</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Thông tin bằng tốt nghiệp -->
+      <div class="box">
+        <h3>Thông tin Bằng tốt nghiệp</h3>
+        <table>
+          <tbody id="data-degree">
+            <tr>
+              <th>Thông tin</th>
+              <th>Chi tiết</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Thông tin chứng chỉ -->
+      <div class="box">
+        <h3>Thông tin chứng chỉ</h3>
+        <table>
+          <tbody id="data-certificate">
+            <tr>
+              <th>Thông tin</th>
+              <th>Chi tiết</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+<script src="/assets/js/homepage.js"></script>
+
+</html>

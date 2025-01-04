@@ -9,10 +9,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DiplomaCreationRequest {
-    
+public class DiplomaCreateInStudentRequest {
     String major;
     String degreeType;
     String issueDate;
-    String studentId;
 }
