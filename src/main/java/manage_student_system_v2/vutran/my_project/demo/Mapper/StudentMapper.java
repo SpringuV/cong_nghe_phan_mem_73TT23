@@ -13,7 +13,8 @@ public interface StudentMapper {
 
     StudentUpdateResponse toStudentResponse(Student student);
 
-    @Mapping(target = "departmentName", source = "departmentName")
+    @Mapping(target = "certificateSet", source = "certificateList")
+    @Mapping(target = "diplomaSet", source = "diplomaList")
     Student toStudent(StudentCreateRequest studentCreateRequest);
 
     @Mapping(target = "certificateSet", ignore = true)

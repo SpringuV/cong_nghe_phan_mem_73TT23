@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const studentId = document.getElementById("student-id").value.trim();
+        console.log(studentId);
         const lastName = document.getElementById("student-last-name").value.trim();
         const firstName = document.getElementById("student-first-name").value.trim();
         const departmentName = document.getElementById("student-department").value;
@@ -48,10 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const requestData = { graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList };
         // Xác định URL và phương thức
         const modalTitle = document.getElementById("modal-title").textContent;
         const isEdit = modalTitle.includes("Sửa"); // Kiểm tra tiêu đề modal có chứa từ "Sửa" không
+
+        const requestData = isEdit ? { graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList } :  {studentId, graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList };
 
         const url = isEdit
             ? `http://localhost:8080/students/update/${studentId}` // API chỉnh sửa
@@ -183,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const count = parseInt(document.getElementById("certificate-count").value, 10);
         const container = document.getElementById("certificate-inputs-container");
 
-        if (isNaN(count) || count < 1) {
+        if (isNaN(count) || count < 0) {
             alert("Vui lòng nhập số lượng chứng chỉ hợp lệ!");
             return;
         }
@@ -287,7 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const count = parseInt(document.getElementById("degree-count").value, 10);
         const container = document.getElementById("degree-inputs-container");
 
-        if (isNaN(count) || count < 1) {
+        if (isNaN(count) || count < 0) {
             alert("Vui lòng nhập số lượng bằng tốt nghiệp hợp lệ!");
             return;
         }

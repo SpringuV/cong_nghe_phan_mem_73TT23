@@ -14,6 +14,8 @@ import manage_student_system_v2.vutran.my_project.demo.Mapper.CertificateMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.DiplomaMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.StudentMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class StudentService {
 
+    private static final Logger log = LoggerFactory.getLogger(StudentService.class);
     StudentRepository studentRepository;
     RoleRepository roleRepository;
     StudentMapper studentMapper;
@@ -44,17 +47,50 @@ public class StudentService {
 
     public StudentUpdateResponse createStudent(StudentCreateRequest createRequest){
 
+        log.info("Student: {}", createRequest);
         if(studentRepository.existsByStudentId(createRequest.getStudentId())){
             throw new AppException(ErrorCode.STUDENT_EXISTED);
         }
 
         Student student = studentMapper.toStudent(createRequest);
-
-        // set Create at
+        student.setStudentId(createRequest.getStudentId());
         student.setCreatedAt(LocalDate.now());
-        // set graduationStatus
         student.setGraduationStatus(createRequest.getGraduationStatus());
 
+        // set Diploma
+        AtomicBoolean checkDiploma = new AtomicBoolean(false);
+        Set<Diploma> diplomaSet = new HashSet<>();
+        createRequest.getDiplomaList().forEach(
+                diplomaRequest -> {
+                    // check diploma existed
+                    if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), createRequest.getStudentId())){
+                        Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
+                        // save diploma
+                        diploma.setStudent(student);
+                        //save
+                        diplomaRepository.save(diploma);
+                        //add set
+                        diplomaSet.add(diploma);
+                        checkDiploma.set(true);
+                    }
+                }
+        );
+        // nếu có diploma mới thì mới cập nhật
+        if(checkDiploma.get()){
+            student.setDiplomaSet(diplomaSet);
+        }
+
+        // set Certificate
+        List<CertificateCreateInStudentRequest> certificates = createRequest.getCertificateList();
+        Set<Certificate>  certificateSet = certificates
+                .stream()
+                .map(request -> {
+                    Certificate certificate = certificateMapper.toCertificateFromStudentRequest(request);
+                    certificate.setStudent(student);
+                    return certificateRepository.save(certificate); // luu tung chung chi
+                }).collect(Collectors.toSet());
+        student.setCertificateSet(certificateSet);
+        student.setUpdateAt(LocalDate.now());
         try{
             studentRepository.save(student);
         } catch (DataIntegrityViolationException e){

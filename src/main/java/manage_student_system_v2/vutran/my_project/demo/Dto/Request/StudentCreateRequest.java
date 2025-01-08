@@ -25,4 +25,6 @@ public class StudentCreateRequest {
     @DobConstraint(min = 18, message = "INVALID_DOB")
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
+    List<CertificateCreateInStudentRequest> certificateList;
+    List<DiplomaCreateInStudentRequest> diplomaList;
 }

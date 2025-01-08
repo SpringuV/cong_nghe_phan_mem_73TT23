@@ -32,7 +32,7 @@ function closeModal() {
 }
 // end certificate modal
 
-// start modal student
+// START MODAL STUDENT
 function openModalStudent(mode, student = null) {
   const modal = document.getElementById("studentModal");
   const title = document.getElementById("modal-title");
@@ -77,6 +77,38 @@ function openDetailModal(student) {
   document.getElementById("detail-student-admission").textContent = student.yearAdmission || "Chưa rõ";
   document.getElementById("detail-dob").textContent = student.dob || "Chưa rõ";
   document.getElementById("detail-email").textContent = student.email || "Chưa rõ";
+
+  // Hiển thị danh sách chứng chỉ
+  const certificateList = document.getElementById("detail-certificates");
+  certificateList.innerHTML = ""; // Xóa dữ liệu cũ
+  if (student.certificates && student.certificates.length > 0) {
+    student.certificates.forEach((cert) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${cert.nameCertificate} - ${cert.certificateType} (Ngày cấp: ${cert.issueDate || "Chưa rõ"})`;
+      certificateList.appendChild(listItem);
+    });
+  } else {
+    const listItem = document.createElement("li");
+    listItem.textContent = "Không có chứng chỉ.";
+    certificateList.appendChild(listItem);
+  }
+
+  // Hiển thị danh sách văn bằng
+  const diplomaList = document.getElementById("detail-diplomas");
+  diplomaList.innerHTML = ""; // Xóa dữ liệu cũ
+  if (student.diplomas && student.diplomas.length > 0) {
+    student.diplomas.forEach((diploma) => {
+      const listItem = document.createElement("li");
+      listItem.textContent = `${diploma.degreeType} - ${diploma.major} (Năm cấp: ${diploma.issueDate || "Chưa rõ"})`;
+      diplomaList.appendChild(listItem);
+    });
+  } else {
+    const listItem = document.createElement("li");
+    listItem.textContent = "Không có văn bằng.";
+    diplomaList.appendChild(listItem);
+  }
+
+
 
   document.getElementById("detailModal").style.display = "block";
 }
