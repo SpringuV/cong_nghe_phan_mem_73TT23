@@ -79,8 +79,8 @@ public class UserService {
     }
 
     @PostAuthorize("hasRole('ADMIN')")
-    public UserResponse getUser(String id){
-        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
+    public UserResponse getUser(String userName){
+        return userMapper.toUserResponse(userRepository.findByUsername(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
     public UserResponse getMyInfo(){

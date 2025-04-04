@@ -53,12 +53,9 @@ public class StudentService {
         }
 
         Student student = studentMapper.toStudent(createRequest);
-        student.setStudentId(createRequest.getStudentId());
         student.setCreatedAt(LocalDate.now());
-        student.setGraduationStatus(createRequest.getGraduationStatus());
-
+        student.setStudentId(createRequest.getStudentId());
         // set Diploma
-        AtomicBoolean checkDiploma = new AtomicBoolean(false);
         Set<Diploma> diplomaSet = new HashSet<>();
         createRequest.getDiplomaList().forEach(
                 diplomaRequest -> {
@@ -71,14 +68,9 @@ public class StudentService {
                         diplomaRepository.save(diploma);
                         //add set
                         diplomaSet.add(diploma);
-                        checkDiploma.set(true);
                     }
                 }
         );
-        // nếu có diploma mới thì mới cập nhật
-        if(checkDiploma.get()){
-            student.setDiplomaSet(diplomaSet);
-        }
 
         // set Certificate
         List<CertificateCreateInStudentRequest> certificates = createRequest.getCertificateList();
@@ -90,7 +82,6 @@ public class StudentService {
                     return certificateRepository.save(certificate); // luu tung chung chi
                 }).collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
-        student.setUpdateAt(LocalDate.now());
         try{
             studentRepository.save(student);
         } catch (DataIntegrityViolationException e){
@@ -99,7 +90,6 @@ public class StudentService {
         return studentMapper.toStudentResponse(student);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
     public List<StudentUpdateResponse> getListStudent(){
         return studentRepository.findAll().stream().map(studentMapper::toStudentUpdateResponse).toList();
     }
@@ -151,8 +141,8 @@ public class StudentService {
     }
 
     public StudentUpdateResponse getStudent(String id){
-        StudentUpdateResponse studentUpdateResponse = new StudentUpdateResponse();
-        studentUpdateResponse = studentMapper.toStudentUpdateResponse(studentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND)));
+        Student student = studentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+        StudentUpdateResponse studentUpdateResponse = studentMapper.toStudentUpdateResponse(student);
         for(CertificateResponse certificateResponse : studentUpdateResponse.getCertificates()){
             certificateResponse.setStudentId(id);
         }

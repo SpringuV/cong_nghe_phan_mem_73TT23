@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
     async function saveStudent(event) {
         event.preventDefault();
         checkSession(); // Đảm bảo phiên làm việc còn hiệu lực
@@ -8,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const studentId = document.getElementById("student-id").value.trim();
+        const studentId = document.getElementById("student-id").value.trim() || "";
         console.log(studentId);
-        const lastName = document.getElementById("student-last-name").value.trim();
+        const lastName = document.getElementById("student-last-name").value.trim() || "";
         const firstName = document.getElementById("student-first-name").value.trim();
         const departmentName = document.getElementById("student-department").value;
         const yearGraduation = document.getElementById("student-year-graduation").value;
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const modalTitle = document.getElementById("modal-title").textContent;
         const isEdit = modalTitle.includes("Sửa"); // Kiểm tra tiêu đề modal có chứa từ "Sửa" không
 
-        const requestData = isEdit ? { graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList } :  {studentId, graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList };
+        const requestData = isEdit ? {graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList } :  {studentId, graduationStatus, lastName, firstName, departmentName, yearAdmission, yearGraduation, email, dob, certificateList, diplomaList };
 
         const url = isEdit
             ? `http://localhost:8080/students/update/${studentId}` // API chỉnh sửa
@@ -118,12 +119,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             <td>${student.graduationStatus}</td>
                             <td>
                                 <button class="detail-btn">Chi tiết</button>
+                                <button class="delete-btn" data-id="${student.studentId}">Xóa</button>
                             </td>
                         `;
                         tableBody.appendChild(row);
                         // Gắn sự kiện cho nút "Detail"
                         row.querySelector(".detail-btn").addEventListener("click", () => openDetailModal(student));
-
+                        // Gắn sự kiện "Xóa"
+                        row.querySelector(".delete-btn").addEventListener("click", (event) => {
+                            const studentId = event.target.getAttribute("data-id"); // Lấy ID từ data-id
+                            deleteStudentFromDetail(studentId); // Truyền ID vào hàm
+                        });
                     });
                 } else {
                     // hiển thị thông báo nếu không có sinh viên
@@ -145,26 +151,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    async function deleteStudentFromDetail() {
-        checkSession(); // Đảm bảo phiên làm việc còn hiệu lực
-        const studentId = document.getElementById("detail-student-id").textContent;
-
+    async function deleteStudentFromDetail(studentId) {
+        if (!studentId) {
+            alert("Không thể xác định sinh viên cần xóa.");
+            return;
+        }
+    
         if (!confirm("Bạn có chắc chắn muốn xóa sinh viên này không?")) return;
-
+    
         const token = localStorage.getItem("token");
         if (!token) {
             alert("Bạn cần đăng nhập để thực hiện chức năng này.");
             return;
         }
-
+    
         try {
-            const response = await fetch(`http://localhost:8080/students/${studentId}`, {
+            const response = await fetch(`http://localhost:8080/students`, {
                 method: "DELETE",
                 headers: {
+                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
+                body: JSON.stringify({ studentId: String(studentId) }), // Gửi ID trong body
             });
-
+    
             if (response.ok) {
                 alert("Xóa sinh viên thành công!");
                 closeDetailModal();
@@ -427,4 +437,5 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("certificate-count").addEventListener("change", generateCertificateInputs);
     document.getElementById("degree-count").addEventListener("change", generateDegreeInputs);
     document.getElementById("student-form").addEventListener("submit", saveStudent);
+    
 });

@@ -23,7 +23,7 @@ public class StudentController {
     StudentService studentService;
 
     @PostMapping
-    ApiResponse<StudentUpdateResponse> createStudent(@RequestBody @Valid StudentCreateRequest request){
+    ApiResponse<StudentUpdateResponse> createStudent(@RequestBody StudentCreateRequest request){
         return ApiResponse.<StudentUpdateResponse>builder()
                 .result(studentService.createStudent(request))
                 .build();
@@ -35,7 +35,8 @@ public class StudentController {
                 .result(studentService.getListStudent())
                 .build();
     }
-
+    //http://localhost:8080/students/${studentId}
+    // tra cuu sinh vien
     @GetMapping("/{studentId}")
     ApiResponse<StudentUpdateResponse> getStudent(@PathVariable("studentId") String id){
         return ApiResponse.<StudentUpdateResponse>builder()

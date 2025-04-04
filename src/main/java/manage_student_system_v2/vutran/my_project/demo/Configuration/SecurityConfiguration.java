@@ -33,14 +33,12 @@ public class SecurityConfiguration {
         this.customJwtDecoder = customJwtDecoder;
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // cors
-                .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT).anonymous()
-                        .requestMatchers(HttpMethod.GET, "/students/*")
-                .permitAll()
+                .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT)
+                .permitAll().requestMatchers(HttpMethod.GET, "/students/*").permitAll()
                 .anyRequest()
                 .authenticated()
         );

@@ -34,28 +34,42 @@ public class ApplicationInitConfiguration {
     ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository){
         log.info("Init application.......");
         return args ->{
-            if(userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()){
-                // create role
+            // Tạo role USER nếu chưa có
+            log.info("Start check role user");
+            if (!roleRepository.existsById(PredefinedRole.USER_ROLE)) {
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER_ROLE)
                         .description("user role")
                         .build());
+                log.info("USER role has been created.");
+            }
 
-                Role adminRole = roleRepository.save(Role.builder()
-                        .name(PredefinedRole.ADMIN_ROLE)
-                        .description("admin role")
-                        .build());
+            // Tạo role ADMIN nếu chưa có
+            log.info("Start check role admin");
+            Role adminRole = roleRepository.findById(PredefinedRole.ADMIN_ROLE)
+                    .orElseGet(() -> {
+                        Role newAdminRole = Role.builder()
+                                .name(PredefinedRole.ADMIN_ROLE)
+                                .description("Role admin")
+                                .build();
+                        log.info("ADMIN role has been created.");
+                        return roleRepository.save(newAdminRole);
+                    });
 
+            // Nếu chưa có user admin thì tạo mới
+            log.info("Start check username");
+            if (!userRepository.existsByUsername(ADMIN_USER_NAME)) {
                 Set<Role> roles = new HashSet<>();
                 roles.add(adminRole);
-                // create admin
+
                 User user = User.builder()
                         .username(ADMIN_USER_NAME)
                         .password(passwordEncoder.encode(ADMIN_PASSWORD))
                         .roles(roles)
                         .build();
+                log.info("create user admin");
                 userRepository.save(user);
-                log.warn("admin user has been created with default password: admin, please change it");
+                log.warn("Admin user has been created with default password: 1234, please change it.");
             }
         };
     }
