@@ -1,5 +1,9 @@
 package manage_student_system_v2.vutran.my_project.demo.Controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -7,9 +11,6 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.RoleCreationR
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.ApiResponse;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.RoleResponse;
 import manage_student_system_v2.vutran.my_project.demo.Service.RoleService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/roles")
@@ -20,28 +21,28 @@ public class RoleController {
     RoleService roleService;
 
     @PostMapping
-    ApiResponse<RoleResponse> createRole(@RequestBody RoleCreationRequest request){
+    ApiResponse<RoleResponse> createRole(@RequestBody RoleCreationRequest request) {
         return ApiResponse.<RoleResponse>builder()
                 .result(roleService.createRole(request))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<RoleResponse>> getListRole(){
+    ApiResponse<List<RoleResponse>> getListRole() {
         return ApiResponse.<List<RoleResponse>>builder()
                 .result(roleService.getListRole())
                 .build();
     }
 
     @DeleteMapping("/{roleId}")
-    ApiResponse<Void> deleteRole(@PathVariable("roleId") String id){
+    ApiResponse<Void> deleteRole(@PathVariable("roleId") String id) {
         roleService.deleteRole(id);
         return ApiResponse.<Void>builder().build();
     }
 
     @PutMapping
-    ApiResponse<RoleResponse> updateRole(@RequestBody RoleCreationRequest roleCreationRequest){
-        return  ApiResponse.<RoleResponse>builder()
+    ApiResponse<RoleResponse> updateRole(@RequestBody RoleCreationRequest roleCreationRequest) {
+        return ApiResponse.<RoleResponse>builder()
                 .result(roleService.updateRole(roleCreationRequest))
                 .build();
     }

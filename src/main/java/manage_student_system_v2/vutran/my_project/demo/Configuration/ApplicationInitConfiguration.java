@@ -1,5 +1,14 @@
 package manage_student_system_v2.vutran.my_project.demo.Configuration;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,14 +18,6 @@ import manage_student_system_v2.vutran.my_project.demo.Entity.Role;
 import manage_student_system_v2.vutran.my_project.demo.Entity.User;
 import manage_student_system_v2.vutran.my_project.demo.Repository.RoleRepository;
 import manage_student_system_v2.vutran.my_project.demo.Repository.UserRepository;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,11 +30,14 @@ public class ApplicationInitConfiguration {
     static final String ADMIN_USER_NAME = "admin";
     static final String ADMIN_PASSWORD = "1234";
 
-    @Bean //khi có class name của mysql thì mới init bean lên, không thì sẽ dùng driverClass của H2 để test
-    @ConditionalOnProperty(prefix = "spring", value = "datasource.driverClassName", havingValue = "com.mysql.cj.jdbc.Driver")
-    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository){
+    @Bean // khi có class name của mysql thì mới init bean lên, không thì sẽ dùng driverClass của H2 để test
+    @ConditionalOnProperty(
+            prefix = "spring",
+            value = "datasource.driverClassName",
+            havingValue = "com.mysql.cj.jdbc.Driver")
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("Init application.......");
-        return args ->{
+        return args -> {
             // Tạo role USER nếu chưa có
             log.info("Start check role user");
             if (!roleRepository.existsById(PredefinedRole.USER_ROLE)) {
@@ -46,15 +50,14 @@ public class ApplicationInitConfiguration {
 
             // Tạo role ADMIN nếu chưa có
             log.info("Start check role admin");
-            Role adminRole = roleRepository.findById(PredefinedRole.ADMIN_ROLE)
-                    .orElseGet(() -> {
-                        Role newAdminRole = Role.builder()
-                                .name(PredefinedRole.ADMIN_ROLE)
-                                .description("Role admin")
-                                .build();
-                        log.info("ADMIN role has been created.");
-                        return roleRepository.save(newAdminRole);
-                    });
+            Role adminRole = roleRepository.findById(PredefinedRole.ADMIN_ROLE).orElseGet(() -> {
+                Role newAdminRole = Role.builder()
+                        .name(PredefinedRole.ADMIN_ROLE)
+                        .description("Role admin")
+                        .build();
+                log.info("ADMIN role has been created.");
+                return roleRepository.save(newAdminRole);
+            });
 
             // Nếu chưa có user admin thì tạo mới
             log.info("Start check username");
@@ -73,5 +76,4 @@ public class ApplicationInitConfiguration {
             }
         };
     }
-
 }

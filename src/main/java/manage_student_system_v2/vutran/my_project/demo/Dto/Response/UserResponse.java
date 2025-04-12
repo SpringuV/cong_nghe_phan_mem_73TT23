@@ -1,11 +1,12 @@
 package manage_student_system_v2.vutran.my_project.demo.Dto.Response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Builder
 @Data
@@ -20,5 +21,6 @@ public class UserResponse {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
+
     Set<RoleResponse> roles;
 }

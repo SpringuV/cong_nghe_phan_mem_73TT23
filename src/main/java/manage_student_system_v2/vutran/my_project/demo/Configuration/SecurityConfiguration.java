@@ -1,7 +1,5 @@
 package manage_student_system_v2.vutran.my_project.demo.Configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +17,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -34,20 +35,20 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity)throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // cors
                 .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINT)
-                .permitAll().requestMatchers(HttpMethod.GET, "/students/*").permitAll()
-                .anyRequest()
-                .authenticated()
-        );
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/students/*")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated());
 
-        httpSecurity.oauth2ResourceServer(oath2 -> oath2.jwt(jwtConfigurer ->
-                jwtConfigurer.decoder(customJwtDecoder)
-                    .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-        );
+        httpSecurity.oauth2ResourceServer(oath2 -> oath2.jwt(jwtConfigurer -> jwtConfigurer
+                        .decoder(customJwtDecoder)
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
@@ -57,8 +58,8 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOriginPattern("*"); // cho phep tat ca cac origin
-//        configuration.addAllowedOrigin("http://127.0.0.1:5500"); // Cho phép frontend truy cập
-//        configuration.addAllowedOrigin("http://localhost:5500"); // Thêm các domain khác nếu cần
+        //        configuration.addAllowedOrigin("http://127.0.0.1:5500"); // Cho phép frontend truy cập
+        //        configuration.addAllowedOrigin("http://localhost:5500"); // Thêm các domain khác nếu cần
         configuration.addAllowedMethod("*"); // Cho phép tất cả phương thức (GET, POST,...)
         configuration.addAllowedHeader("*"); // Cho phép tất cả header
         configuration.setAllowCredentials(true); // Cho phép gửi cookie
@@ -69,20 +70,20 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    ObjectMapper objectMapper(){
+    ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return objectMapper;
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
     // chuyen doi VD: admin -> ROLE_ADMIN
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter(){
+    JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 

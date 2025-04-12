@@ -1,7 +1,8 @@
 package manage_student_system_v2.vutran.my_project.demo.Exception;
 
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
@@ -25,15 +26,13 @@ public enum ErrorCode {
     CERTIFICATE_EXISTED(102, "Certificate existed !", HttpStatus.BAD_REQUEST),
     CERTIFICATE_NOT_FOUND(103, "Certificate not found !", HttpStatus.NOT_FOUND),
     ROLE_NOT_FOUND(103, "Role not found !", HttpStatus.NOT_FOUND),
-    PERMISSION_NOT_FOUND(103, "Permission not found !", HttpStatus.NOT_FOUND)
-    ;
+    PERMISSION_NOT_FOUND(103, "Permission not found !", HttpStatus.NOT_FOUND);
 
-    ErrorCode(int code, String message, HttpStatus httpStatus){
+    ErrorCode(int code, String message, HttpStatus httpStatus) {
         this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
     }
-
 
     private int code;
     private String message;

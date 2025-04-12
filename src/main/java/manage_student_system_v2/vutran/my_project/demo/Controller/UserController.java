@@ -1,6 +1,11 @@
 package manage_student_system_v2.vutran.my_project.demo.Controller;
 
+import java.util.List;
+
 import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +17,6 @@ import manage_student_system_v2.vutran.my_project.demo.Dto.Request.UserUpdateReq
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.*;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.UserMapper;
 import manage_student_system_v2.vutran.my_project.demo.Service.UserService;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -28,14 +30,14 @@ public class UserController {
     UserMapper userMapper;
 
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest userCreationRequest){
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest userCreationRequest) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(userCreationRequest))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<UserResponse>> getListUser(){
+    public ApiResponse<List<UserResponse>> getListUser() {
         log.info("In controller: method get list User");
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getListUser())
@@ -43,7 +45,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateInfoUser(@PathVariable("userId") String id, @RequestBody UserUpdateRequest userUpdateRequest){
+    public ApiResponse<UserResponse> updateInfoUser(
+            @PathVariable("userId") String id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         log.info("In controller: method update Info User");
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(id, userUpdateRequest))
@@ -51,24 +54,24 @@ public class UserController {
     }
 
     @GetMapping("/myInfo")
-    public ApiResponse<UserResponse> getMyInfo(){
+    public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getMyInfo())
                 .build();
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUser(@PathVariable("userId") String id){
+    public ApiResponse<UserResponse> getUser(@PathVariable("userId") String id) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(id))
                 .build();
     }
 
     @PostMapping("/change-pass/{username}")
-    public ApiResponse<ChangePassResponse> changePassword(@PathVariable("username") String username,@RequestBody @Valid ChangePasswordRequest request){
+    public ApiResponse<ChangePassResponse> changePassword(
+            @PathVariable("username") String username, @RequestBody @Valid ChangePasswordRequest request) {
         return ApiResponse.<ChangePassResponse>builder()
                 .result(userService.changePassword(username, request))
                 .build();
     }
-
 }

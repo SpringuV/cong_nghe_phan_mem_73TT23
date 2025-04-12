@@ -1,12 +1,13 @@
 package manage_student_system_v2.vutran.my_project.demo.Mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentCreateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Request.StudentUpdateRequest;
 import manage_student_system_v2.vutran.my_project.demo.Dto.Response.StudentUpdateResponse;
 import manage_student_system_v2.vutran.my_project.demo.Entity.Student;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {

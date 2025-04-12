@@ -1,5 +1,11 @@
 package manage_student_system_v2.vutran.my_project.demo.Service;
 
+import java.util.HashSet;
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,11 +18,6 @@ import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.RoleMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.PermissionRepository;
 import manage_student_system_v2.vutran.my_project.demo.Repository.RoleRepository;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -28,7 +29,7 @@ public class RoleService {
     PermissionRepository permissionRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
-    public RoleResponse createRole(RoleCreationRequest request){
+    public RoleResponse createRole(RoleCreationRequest request) {
         Role role = roleMapper.toRole(request);
 
         List<Permission> permissions = permissionRepository.findAllById(request.getPermissions());
@@ -38,18 +39,20 @@ public class RoleService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<RoleResponse> getListRole(){
+    public List<RoleResponse> getListRole() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteRole(String id){
+    public void deleteRole(String id) {
         roleRepository.deleteById(id);
     }
 
-    public RoleResponse updateRole(RoleCreationRequest creationRequest){
+    public RoleResponse updateRole(RoleCreationRequest creationRequest) {
         // check id
-        Role role = roleRepository.findById(creationRequest.getName()).orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = roleRepository
+                .findById(creationRequest.getName())
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
         role.setDescription(creationRequest.getDescription());
 
         // set Permission
@@ -59,5 +62,4 @@ public class RoleService {
 
         return roleMapper.toRoleResponse(role);
     }
-
 }

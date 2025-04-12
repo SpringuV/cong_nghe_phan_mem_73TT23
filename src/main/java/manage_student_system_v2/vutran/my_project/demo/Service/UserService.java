@@ -1,5 +1,16 @@
 package manage_student_system_v2.vutran.my_project.demo.Service;
 
+import java.util.*;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +27,6 @@ import manage_student_system_v2.vutran.my_project.demo.Exception.ErrorCode;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.UserMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.RoleRepository;
 import manage_student_system_v2.vutran.my_project.demo.Repository.UserRepository;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +39,9 @@ public class UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-    public UserResponse createUser(UserCreationRequest userCreationRequest){
+    public UserResponse createUser(UserCreationRequest userCreationRequest) {
         // check User exist
-        if(userRepository.existsByUsername(userCreationRequest.getUsername())){
+        if (userRepository.existsByUsername(userCreationRequest.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
@@ -54,21 +55,21 @@ public class UserService {
 
         try {
             user = userRepository.save(user);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         return userMapper.toUserResponse(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getListUser(){
+    public List<UserResponse> getListUser() {
         log.info("In method get List User");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
     // Người dùng được phép cập nhật nếu họ là chủ sở hữu của User hoặc admin
     @PostAuthorize("returnObject.id == #id || hasRole('ADMIN')")
-    public UserResponse updateUser(String id,UserUpdateRequest request){
+    public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
 
         userMapper.updateUser(user, request);
@@ -79,25 +80,26 @@ public class UserService {
     }
 
     @PostAuthorize("hasRole('ADMIN')")
-    public UserResponse getUser(String userName){
-        return userMapper.toUserResponse(userRepository.findByUsername(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
+    public UserResponse getUser(String userName) {
+        return userMapper.toUserResponse(
+                userRepository.findByUsername(userName).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
-    public UserResponse getMyInfo(){
+    public UserResponse getMyInfo() {
         // sau khi user login success sẽ được lưu thông tin đăng nhập tại security context holder
         SecurityContext context = SecurityContextHolder.getContext();
-        String name =context.getAuthentication().getName();
-        User user = userRepository.findByUsername(name).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXIST));
+        String name = context.getAuthentication().getName();
+        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
     }
 
     // Người dùng được phép cập nhật nếu họ là chủ sở hữu của User hoặc admin
-    @PreAuthorize("#id == authentication.principal.id || hasRole('ADMIN')")
-    public ChangePassResponse changePassword(String username, ChangePasswordRequest request){
-        String result ="Password changed successfully !";
-        User user = userRepository.findByUsername(username).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+    public ChangePassResponse changePassword(String username, ChangePasswordRequest request) {
+        String result = "Password changed successfully !";
+        User user =
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         // if old password encode correct
-        if(!passwordEncoder.matches(request.getOldPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
         }
         // encode new pass
@@ -106,5 +108,4 @@ public class UserService {
         userRepository.save(user);
         return ChangePassResponse.builder().response(result).build();
     }
-
 }

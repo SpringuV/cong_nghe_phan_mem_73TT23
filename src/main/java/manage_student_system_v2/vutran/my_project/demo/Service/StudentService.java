@@ -1,5 +1,19 @@
 package manage_student_system_v2.vutran.my_project.demo.Service;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,20 +28,6 @@ import manage_student_system_v2.vutran.my_project.demo.Mapper.CertificateMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.DiplomaMapper;
 import manage_student_system_v2.vutran.my_project.demo.Mapper.StudentMapper;
 import manage_student_system_v2.vutran.my_project.demo.Repository.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -45,10 +45,10 @@ public class StudentService {
     CertificateMapper certificateMapper;
     DiplomaMapper diplomaMapper;
 
-    public StudentUpdateResponse createStudent(StudentCreateRequest createRequest){
+    public StudentUpdateResponse createStudent(StudentCreateRequest createRequest) {
 
         log.info("Student: {}", createRequest);
-        if(studentRepository.existsByStudentId(createRequest.getStudentId())){
+        if (studentRepository.existsByStudentId(createRequest.getStudentId())) {
             throw new AppException(ErrorCode.STUDENT_EXISTED);
         }
 
@@ -57,106 +57,109 @@ public class StudentService {
         student.setStudentId(createRequest.getStudentId());
         // set Diploma
         Set<Diploma> diplomaSet = new HashSet<>();
-        createRequest.getDiplomaList().forEach(
-                diplomaRequest -> {
-                    // check diploma existed
-                    if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), createRequest.getStudentId())){
-                        Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
-                        // save diploma
-                        diploma.setStudent(student);
-                        //save
-                        diplomaRepository.save(diploma);
-                        //add set
-                        diplomaSet.add(diploma);
-                    }
-                }
-        );
+        createRequest.getDiplomaList().forEach(diplomaRequest -> {
+            // check diploma existed
+            if (!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(
+                    diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), createRequest.getStudentId())) {
+                Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
+                // save diploma
+                diploma.setStudent(student);
+                // save
+                diplomaRepository.save(diploma);
+                // add set
+                diplomaSet.add(diploma);
+            }
+        });
 
         // set Certificate
         List<CertificateCreateInStudentRequest> certificates = createRequest.getCertificateList();
-        Set<Certificate>  certificateSet = certificates
-                .stream()
+        Set<Certificate> certificateSet = certificates.stream()
                 .map(request -> {
                     Certificate certificate = certificateMapper.toCertificateFromStudentRequest(request);
                     certificate.setStudent(student);
                     return certificateRepository.save(certificate); // luu tung chung chi
-                }).collect(Collectors.toSet());
+                })
+                .collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
-        try{
+        try {
             studentRepository.save(student);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         return studentMapper.toStudentResponse(student);
     }
 
-    public List<StudentUpdateResponse> getListStudent(){
-        return studentRepository.findAll().stream().map(studentMapper::toStudentUpdateResponse).toList();
+    public List<StudentUpdateResponse> getListStudent() {
+        return studentRepository.findAll().stream()
+                .map(studentMapper::toStudentUpdateResponse)
+                .toList();
     }
 
-    public StudentUpdateResponse updateStudent(String id, StudentUpdateRequest studentUpdateRequest){
+    public StudentUpdateResponse updateStudent(String id, StudentUpdateRequest studentUpdateRequest) {
         System.out.println("dang trong ham update student");
         // check id
-        Student student = studentRepository.findByStudentId(id).orElseThrow(()->new AppException(ErrorCode.STUDENT_NOT_FOUND));
+        Student student =
+                studentRepository.findByStudentId(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         studentMapper.updateStudent(student, studentUpdateRequest);
         Student finalStudent = student;
         // set Diploma
         AtomicBoolean checkDiploma = new AtomicBoolean(false);
         Set<Diploma> diplomaSet = new HashSet<>();
-        studentUpdateRequest.getDiplomaList().forEach(
-            diplomaRequest -> {
-                // check diploma existed
-                if(!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), id)){
-                    Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
-                    // save diploma
-                    diploma.setStudent(finalStudent);
-                    //save
-                    diplomaRepository.save(diploma);
-                    //add set
-                    diplomaSet.add(diploma);
-                    checkDiploma.set(true);
-                }
+        studentUpdateRequest.getDiplomaList().forEach(diplomaRequest -> {
+            // check diploma existed
+            if (!diplomaRepository.existsByDegreeTypeAndMajorAndStudent_StudentId(
+                    diplomaRequest.getDegreeType(), diplomaRequest.getMajor(), id)) {
+                Diploma diploma = diplomaMapper.toDiplomaFromStudentRequest(diplomaRequest);
+                // save diploma
+                diploma.setStudent(finalStudent);
+                // save
+                diplomaRepository.save(diploma);
+                // add set
+                diplomaSet.add(diploma);
+                checkDiploma.set(true);
             }
-        );
+        });
         // nếu có diploma mới thì mới cập nhật
-        if(checkDiploma.get()){
+        if (checkDiploma.get()) {
             student.setDiplomaSet(diplomaSet);
         }
 
         // set Certificate
         List<CertificateCreateInStudentRequest> certificates = studentUpdateRequest.getCertificateList();
-        Set<Certificate>  certificateSet = certificates
-                .stream()
+        Set<Certificate> certificateSet = certificates.stream()
                 .map(request -> {
                     Certificate certificate = certificateMapper.toCertificateFromStudentRequest(request);
                     certificate.setStudent(finalStudent);
                     return certificateRepository.save(certificate); // luu tung chung chi
-                }).collect(Collectors.toSet());
+                })
+                .collect(Collectors.toSet());
         student.setCertificateSet(certificateSet);
         student.setUpdateAt(LocalDate.now());
-        //save
+        // save
         student = studentRepository.save(student);
 
         return studentMapper.toStudentUpdateResponse(student);
     }
 
-    public StudentUpdateResponse getStudent(String id){
-        Student student = studentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+    public StudentUpdateResponse getStudent(String id) {
+        Student student =
+                studentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         StudentUpdateResponse studentUpdateResponse = studentMapper.toStudentUpdateResponse(student);
-        for(CertificateResponse certificateResponse : studentUpdateResponse.getCertificates()){
+        for (CertificateResponse certificateResponse : studentUpdateResponse.getCertificates()) {
             certificateResponse.setStudentId(id);
         }
-        for(DiplomaResponse diplomaResponse : studentUpdateResponse.getDiplomas()){
+        for (DiplomaResponse diplomaResponse : studentUpdateResponse.getDiplomas()) {
             diplomaResponse.setStudentId(id);
         }
-        return  studentUpdateResponse;
+        return studentUpdateResponse;
     }
 
-    public String deleteStudent(StudentDeleteRequest deleteRequest){
+    public String deleteStudent(StudentDeleteRequest deleteRequest) {
         // check id
-        Student student = studentRepository.findByStudentId(deleteRequest.getStudentId()).orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
+        Student student = studentRepository
+                .findByStudentId(deleteRequest.getStudentId())
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
         studentRepository.delete(student);
         return "Deleted Student Id: " + deleteRequest.getStudentId();
     }
-
 }
